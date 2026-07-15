@@ -1,0 +1,12 @@
+@media (max-width:768px) {
+    .head {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    main {
+        margin-left: 0 !important;
+    }
+
+}

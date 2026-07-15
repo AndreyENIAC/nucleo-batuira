@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acolhidos — Núcleo Batuíra</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
+  <aside class="sidebar">
+
+    <div class="sidebar-cabecalho">
+      <img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png"
+           alt="Núcleo Batuíra"
+           class="logo-sidebar"
+           onerror="this.style.display='none'">
+      <div class="usuario-info">
+        <p class="usuario-nome">Ana Administradora</p>
+        <span class="usuario-cargo">Administradora</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="index.html"      class="link-sidebar">📊 Dashboard</a>
+      <a href="acolhidos.html"  class="link-sidebar ativo">👥 Acolhidos</a>
+      <a href="financeiro.html" class="link-sidebar">💼 Gestão Financeira</a>
+    </nav>
+
+    <div class="sidebar-rodape">
+      <a href="login.html" class="btn btn-danger w-100 btn-sm">🚪 Sair</a>
+    </div>
+
+  </aside>
+
+  <!-- =====================================================
+       CONTEÚDO PRINCIPAL — Lista de Acolhidos
+       ===================================================== -->
+  <main class="conteudo">
+
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+      <div>
+        <h4 class="text-primary mb-1">👥 Acolhidos</h4>
+        <p class="text-muted mb-0">7 residentes exibidos</p>
+      </div>
+      <!-- Botão abre formulário de novo acolhido -->
+      <button class="btn btn-primary"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#form-novo-acolhido">
+        ➕ Novo Acolhido
+      </button>
+    </div>
+
+    <!-- Formulário de novo acolhido (oculto por padrão) -->
+    <div class="collapse mb-4" id="form-novo-acolhido">
+      <div class="card-nb p-4" style="background:#eff6ff;">
+        <h6 class="mb-3">Cadastrar Novo Acolhido</h6>
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nome Completo</label>
+              <input type="text" class="form-control" placeholder="Nome completo">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Idade</label>
+              <input type="number" class="form-control" placeholder="Ex: 78">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Quarto</label>
+              <input type="text" class="form-control" placeholder="Ex: 101-A">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Condição Principal</label>
+              <input type="text" class="form-control" placeholder="Diagnóstico principal">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tipo de Atendimento</label>
+              <select class="form-select">
+                <option>Plano Privado</option>
+                <option>Convênio SUS</option>
+                <option>Particular</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            <button type="button" class="btn btn-success"
+                    onclick="alert('Em produção: dados seriam enviados ao servidor Flask.')">
+              ✓ Salvar
+            </button>
+            <button type="button" class="btn btn-secondary"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#form-novo-acolhido">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Barra de busca e filtro -->
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+      <input type="text"
+             id="busca-acolhido"
+             class="form-control"
+             style="max-width: 280px;"
+             placeholder="🔍 Buscar por nome...">
+
+      <select id="filtro-status" class="form-select" style="max-width: 180px;">
+        <option value="">Todos os status</option>
+        <option value="ativo">Ativo</option>
+        <option value="crítico">Crítico</option>
+        <option value="atenção">Atenção</option>
+        <option value="alta">Alta Méd.</option>
+      </select>
+    </div>
+
+    <!-- Tabela de acolhidos -->
+    <div class="card-nb overflow-hidden">
+      <table class="tabela-nb">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Idade</th>
+            <th>Quarto</th>
+            <th>Condição Principal</th>
+            <th>Tipo</th>
+            <th>Última Consulta</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Cada linha tem classe "linha-acolhido" para o filtro JS -->
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Maria Silva</td>
+            <td>78 anos</td>
+            <td>101-A</td>
+            <td>Demência Moderada</td>
+            <td class="text-muted small">Plano Privado</td>
+            <td class="text-muted small">10/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-ativo">Ativo</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">José Santos</td>
+            <td>82 anos</td>
+            <td>102-B</td>
+            <td>Hipertensão</td>
+            <td class="text-muted small">Convênio SUS</td>
+            <td class="text-muted small">08/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-ativo">Ativo</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Ana Costa</td>
+            <td>75 anos</td>
+            <td>103-A</td>
+            <td>Diabetes Tipo 2</td>
+            <td class="text-muted small">Particular</td>
+            <td class="text-muted small">05/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-ativo">Ativo</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Pedro Oliveira</td>
+            <td>88 anos</td>
+            <td>201-B</td>
+            <td>Insuficiência Cardíaca</td>
+            <td class="text-muted small">Plano Privado</td>
+            <td class="text-muted small">12/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-critico">Crítico</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Luiza Ferreira</td>
+            <td>71 anos</td>
+            <td>202-A</td>
+            <td>Parkinson Leve</td>
+            <td class="text-muted small">Convênio SUS</td>
+            <td class="text-muted small">09/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-ativo">Ativo</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Carlos Mendes</td>
+            <td>84 anos</td>
+            <td>203-B</td>
+            <td>Pós-AVC</td>
+            <td class="text-muted small">Particular</td>
+            <td class="text-muted small">11/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-atencao">Atenção</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+          <tr class="linha-acolhido">
+            <td class="col-nome fw-semibold">Regina Almeida</td>
+            <td>79 anos</td>
+            <td>301-A</td>
+            <td>Osteoporose</td>
+            <td class="text-muted small">Plano Privado</td>
+            <td class="text-muted small">07/06/2026</td>
+            <td class="col-status"><span class="badge-nb badge-alta">Alta Méd.</span></td>
+            <td>
+              <a href="perfil.html" class="btn btn-primary btn-sm">Ver Perfil →</a>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

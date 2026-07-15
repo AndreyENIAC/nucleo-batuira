@@ -1,0 +1,295 @@
+/* =====================================================
+   style.css — Núcleo Batuíra
+   Estilos compartilhados por todas as páginas
+   ===================================================== */
+
+/* --- Variáveis de cor --- */
+:root {
+  --azul:       #1e40af;
+  --azul-claro: #3b82f6;
+  --azul-bg:    #eff6ff;
+  --azul-borda: #bfdbfe;
+  --cinza-bg:   #f8fafc;
+  --sidebar-w:  260px;
+}
+
+/* --- Reset básico --- */
+* { box-sizing: border-box; }
+body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
+
+/* =====================================================
+   LAYOUT: sidebar + conteúdo lado a lado
+   ===================================================== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.conteudo {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* =====================================================
+   SIDEBAR — cabeçalho e navegação
+   ===================================================== */
+.sidebar-cabecalho {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: var(--azul-bg);
+}
+
+.logo-sidebar {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.usuario-info {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.usuario-nome {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
+  color: #1e293b;
+}
+
+.usuario-cargo {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Links da sidebar */
+.link-sidebar {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 0.92rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.link-sidebar:hover {
+  background: var(--azul-bg);
+  color: var(--azul);
+}
+
+.link-sidebar.ativo {
+  background: var(--azul-bg);
+  color: var(--azul);
+  font-weight: 600;
+  border-left: 3px solid var(--azul);
+}
+
+.sidebar-rodape {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* =====================================================
+   CARDS — caixas de conteúdo
+   ===================================================== */
+.card-nb {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(30, 64, 175, 0.06);
+}
+
+.card-stat {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+/* =====================================================
+   TABELAS
+   ===================================================== */
+.tabela-nb {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-nb thead th {
+  background: var(--azul-bg);
+  color: var(--azul);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--azul-borda);
+}
+
+.tabela-nb tbody td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.tabela-nb tbody tr:hover {
+  background: #fafcff;
+}
+
+/* =====================================================
+   BADGES de status
+   ===================================================== */
+.badge-ativo    { background: #dcfce7; color: #166534; }
+.badge-critico  { background: #fee2e2; color: #991b1b; }
+.badge-atencao  { background: #fef9c3; color: #854d0e; }
+.badge-alta     { background: #dbeafe; color: #1e40af; }
+.badge-aprovado { background: #dcfce7; color: #166534; }
+.badge-analise  { background: #fef9c3; color: #854d0e; }
+.badge-pendente { background: #f3f4f6; color: #374151; }
+.badge-admin    { background: #fee2e2; color: #991b1b; }
+.badge-tecnico  { background: #dcfce7; color: #166534; }
+.badge-financeiro { background: #fef9c3; color: #854d0e; }
+.badge-staff    { background: #f3f4f6; color: #374151; }
+
+.badge-nb {
+  display: inline-block;
+  padding: 0.25em 0.65em;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* =====================================================
+   FORMULÁRIOS
+   ===================================================== */
+.campo {
+  border: 1px solid var(--azul-borda);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo:focus {
+  border-color: var(--azul-claro);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* =====================================================
+   BARRA DE PROGRESSO
+   ===================================================== */
+.progresso-barra {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progresso-fill {
+  height: 100%;
+  background: var(--azul-claro);
+  border-radius: 99px;
+}
+
+/* =====================================================
+   AVATAR do acolhido
+   ===================================================== */
+.avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--azul-bg);
+  border: 2px solid var(--azul-borda);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   LOGIN — tela especial sem sidebar
+   ===================================================== */
+.bg-login {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+}
+
+.card-login {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: none;
+}
+
+.logo-login {
+  max-width: 200px;
+  height: auto;
+}
+
+/* =====================================================
+   TABS — abas de conteúdo
+   ===================================================== */
+.nav-tabs-nb {
+  border-bottom: 2px solid #e5e7eb;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.nav-tabs-nb .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: #6b7280;
+  padding: 0.6rem 1rem;
+  margin-bottom: -2px;
+  font-size: 0.88rem;
+}
+
+.nav-tabs-nb .nav-link.active {
+  color: var(--azul);
+  border-bottom-color: var(--azul);
+  font-weight: 600;
+  background: transparent;
+}
+
+.nav-tabs-nb .nav-link:hover:not(.active) {
+  background: var(--azul-bg);
+  border-radius: 6px 6px 0 0;
+  color: var(--azul-claro);
+}
+
+/* =====================================================
+   RESPONSIVO — esconde sidebar em telas pequenas
+   ===================================================== */
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; min-height: auto; }
+  .conteudo { padding: 1rem; }
+}

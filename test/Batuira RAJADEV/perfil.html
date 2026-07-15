@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--BootStrap CSS-->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!--BootStrap Icones-->
+    <link rel="stylesheet" href="assets/css/all.css">
+    <title>Dashboard Admin</title>
+
+    <!-- CSS -->
+     <link rel="stylesheet" href="assets/css/style.css">
+     <link rel="stylesheet" href="assets/css/responsivo.css" media="screen">
+</head>
+     
+     <!--Menu Lateral-->
+     
+<body>
+    <div class="interface">
+     <header class="head">
+      <nav>
+        <ul class="d-grid gap-3">
+            <li><a href="Index.html" class="actives"><span class="fs-3"><i class="fa-solid fa-chart-line text-danger"></i></span><p class="fs-3">Dashboard</p></a></li>
+            <li><a href="acolhidos.html"><span class="fs-3"><i class="fa-solid fa-people-group text-primary" style="color:blue !important;"></i></span><p class="fs-3">Acolhidos</p></a></li>
+            <li><a href=""><span class="fs-3"><i class="fa-solid fa-wallet text-warning" style="color:#4d190b !important;"></i> </i></span><p class="fs-3">Gestão Financeira</p></a></li>
+            <li ><a href=""><span class="fs-3"><i class="fa-solid fa-gear text-secondary"></i></span><p class="fs-3">Gerenciar Usuários</p></a></li>
+        </ul>
+        <li class="button fs-3" ><i class="fa-solid fa-door-open text-warning" style="color:#4d190b !important;"></i><p class="text-white">SAIR</p></li>
+      </nav>
+     </header>
+
+     <!--Dashboard-->
+
+     <main>
+        <!DOCTYPE html>
+        <html lang="pt-br">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/all.css">
+        
+        <title>Perfil do Paciente</title>
+        </head>
+        
+        <body class="bg-light">
+        
+        <div class="container mt-4">
+        
+            <a href="acolhidos.html" class="btn btn-secondary mb-4">
+                ← Voltar
+            </a>
+        
+            <div class="card shadow p-4">
+        
+                <div class="row">
+        
+                    <div class="col-md-3 text-center">
+        
+                        <img src="https://via.placeholder.com/180"
+                             class="rounded-circle mb-3">
+        
+                        <h3>Maria Silva</h3>
+        
+                        <span class="badge bg-success">
+                            Estável
+                        </span>
+        
+                    </div>
+        
+                    <div class="col-md-9">
+        
+                        <h4>Informações</h4>
+        
+                        <table class="table table-bordered">
+        
+                            <tr>
+                                <th>Nome</th>
+                                <td>Maria Silva</td>
+                            </tr>
+        
+                            <tr>
+                                <th>Idade</th>
+                                <td>78 anos</td>
+                            </tr>
+        
+                            <tr>
+                                <th>Sala</th>
+                                <td>Ala A - 101</td>
+                            </tr>
+        
+                            <tr>
+                                <th>Responsável</th>
+                                <td>João da Silva</td>
+                            </tr>
+        
+                            <tr>
+                                <th>Telefone</th>
+                                <td>(11) 99999-9999</td>
+                            </tr>
+        
+                            <tr>
+                                <th>Entrada</th>
+                                <td>15/02/2026</td>
+                            </tr>
+        
+                        </table>
+        
+                    </div>
+        
+                </div>
+        
+                <hr>
+        
+                <div class="btn-group mb-4">
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('pia')">
+                        PIA / PTS
+                    </button>
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('prescricao')">
+                        Prescrições
+                    </button>
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('notas')">
+                        Notas Clínicas
+                    </button>
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('vinculos')">
+                        Vínculos
+                    </button>
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('alta')">
+                        Plano de Alta
+                    </button>
+        
+                    <button class="btn btn-outline-primary" onclick="abrirAba('excel')">
+                        Documentos Excel
+                    </button>
+        
+                </div>
+        
+                <div id="pia" class="aba">
+                    <h4>PIA / PTS</h4>
+                    <textarea class="form-control" rows="8"></textarea>
+                </div>
+        
+                <div id="prescricao" class="aba" style="display:none;">
+                    <h4>Prescrições</h4>
+                    <textarea class="form-control" rows="8"></textarea>
+                </div>
+        
+                <div id="notas" class="aba" style="display:none;">
+                    <h4>Notas Clínicas</h4>
+                    <textarea class="form-control" rows="8"></textarea>
+                </div>
+        
+                <div id="vinculos" class="aba" style="display:none;">
+                    <h4>Vínculos</h4>
+                    <textarea class="form-control" rows="8"></textarea>
+                </div>
+        
+                <div id="alta" class="aba" style="display:none;">
+                    <h4>Plano de Alta</h4>
+                    <textarea class="form-control" rows="8"></textarea>
+                </div>
+        
+                <div id="excel" class="aba" style="display:none;">
+                    <h4>Documentos Excel</h4>
+        
+                    <input type="file" class="form-control mb-3">
+        
+                    <button class="btn btn-success">
+                        Enviar Documento
+                    </button>
+        
+                </div>
+        
+            </div>
+        
+        </div>
+        
+        <script>
+        
+        function abrirAba(id){
+        
+            const abas=document.querySelectorAll(".aba");
+        
+            abas.forEach(function(aba){
+        
+                aba.style.display="none";
+        
+            });
+        
+            document.getElementById(id).style.display="block";
+        
+        }
+        
+        </script>
+        
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        
+        </body>
+        </html>
+
+     </main>
+    </div>
+
+    <!--BootStrap JavaScript-->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

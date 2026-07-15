@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Batuíra - Login</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#ffffff;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+header{
+    background:#ffffff;
+    color:#0f172a;
+    text-align:center;
+    padding:20px;
+    font-size:28px;
+    font-weight:bold;
+    border-bottom:3px solid #0284c7;
+}
+
+.container{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-box{
+    background:#f8fafc;
+    width:400px;
+    padding:35px;
+    border-radius:15px;
+    border:1px solid #dbeafe;
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+}
+
+.login-box h2{
+    text-align:center;
+    margin-bottom:25px;
+    color:#0f172a;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#0284c7;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#0284c7;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#0369a1;
+}
+
+.forgot-password{
+    text-align:center;
+    margin-top:15px;
+}
+
+.btn-forgot{
+    display:block;
+    width:100%;
+    padding:12px;
+    background:#ffffff;
+    color:#0284c7;
+    text-decoration:none;
+    border:1px solid #0284c7;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-forgot:hover{
+    background:#0284c7;
+    color:white;
+}
+
+footer{
+    background:#ffffff;
+    color:#0f172a;
+    text-align:center;
+    padding:12px;
+    border-top:1px solid #dbeafe;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    Portal Batuíra
+</header>
+
+<div class="container">
+    <div class="login-box">
+
+        <h2>Acesso ao Sistema</h2>
+
+        <form id="loginForm" action="troca-senha.html">
+
+            <input type="text" id="username" placeholder="Usuário" required>
+
+            <input type="password" id="senha" placeholder="Senha" required>
+
+            <button type="submit">Entrar</button>
+
+        </form>
+
+
+
+        <div class="forgot-password">
+            <a href="troca_senha_batuira.html" class="btn-forgot">
+                Esqueci minha senha
+            </a>
+        </div>
+    
