@@ -125,17 +125,26 @@
             <input type="file" class="form-control" accept=".xlsx,.xls,.csv,.pdf">
           </div>
 
+          <!-- Campo de busca Documentos -->
+          <div class="mb-3">
+            <input type="text"
+                   id="busca-documento"
+                   class="form-control"
+                   style="max-width: 320px;"
+                   placeholder="🔍 Buscar documento...">
+          </div>
+
           <!-- Lista de documentos -->
           <div class="card-nb">
             <div class="p-3 border-bottom" style="background:#f8fafc;">
               <h6 class="mb-0">Documentos Armazenados (3)</h6>
             </div>
 
-            <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+            <div class="linha-documento d-flex align-items-center gap-3 p-3 border-bottom">
               <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
                           display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📊</div>
               <div class="flex-grow-1">
-                <p class="fw-medium small mb-0">Balanço Financeiro — Maio 2026.xlsx</p>
+                <p class="fw-medium small mb-0 col-doc-nome">Balanço Financeiro — Maio 2026.xlsx</p>
                 <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
                   <span class="badge bg-info text-dark">Balanço</span>
                   <span>📅 31/05/2026</span>
@@ -148,11 +157,11 @@
               </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+            <div class="linha-documento d-flex align-items-center gap-3 p-3 border-bottom">
               <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
                           display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📊</div>
               <div class="flex-grow-1">
-                <p class="fw-medium small mb-0">Planilha de Gastos — Abril 2026.xlsx</p>
+                <p class="fw-medium small mb-0 col-doc-nome">Planilha de Gastos — Abril 2026.xlsx</p>
                 <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
                   <span class="badge bg-info text-dark">Gastos</span>
                   <span>📅 30/04/2026</span>
@@ -165,11 +174,11 @@
               </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3 p-3">
+            <div class="linha-documento d-flex align-items-center gap-3 p-3">
               <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
                           display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📄</div>
               <div class="flex-grow-1">
-                <p class="fw-medium small mb-0">Relatório de Prestação de Contas — 1T 2026.pdf</p>
+                <p class="fw-medium small mb-0 col-doc-nome">Relatório de Prestação de Contas — 1T 2026.pdf</p>
                 <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
                   <span class="badge bg-warning text-dark">Relatório</span>
                   <span>📅 15/04/2026</span>
@@ -278,6 +287,15 @@
             </div>
           </div>
 
+          <!-- Campo de busca Gastos -->
+          <div class="mb-3">
+            <input type="text"
+                   id="busca-gasto"
+                   class="form-control"
+                   style="max-width: 320px;"
+                   placeholder="🔍 Buscar por descrição ou acolhido...">
+          </div>
+
           <!-- Tabela de gastos -->
           <div class="card-nb overflow-hidden">
             <table class="tabela-nb">
@@ -292,41 +310,41 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Medicamentos — Junho/2026</td>
-                  <td class="text-muted small">Maria Silva</td>
+                <tr class="linha-gasto">
+                  <td class="col-gasto-desc">Medicamentos — Junho/2026</td>
+                  <td class="col-gasto-acolhido text-muted small">Maria Silva</td>
                   <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Saúde</span></td>
                   <td class="text-muted small">Farmácia Popular</td>
                   <td class="text-muted small">05/06/2026</td>
                   <td class="fw-semibold text-danger text-end">R$ 485,50</td>
                 </tr>
-                <tr>
-                  <td>Fraldas Geriátricas — Jun/2026</td>
-                  <td class="text-muted small">José Santos</td>
+                <tr class="linha-gasto">
+                  <td class="col-gasto-desc">Fraldas Geriátricas — Jun/2026</td>
+                  <td class="col-gasto-acolhido text-muted small">José Santos</td>
                   <td><span class="badge-nb badge-pendente" style="font-size:0.7rem;">Higiene</span></td>
                   <td class="text-muted small">Distribuidor ABC</td>
                   <td class="text-muted small">06/06/2026</td>
                   <td class="fw-semibold text-danger text-end">R$ 189,90</td>
                 </tr>
-                <tr>
-                  <td>Nutrição Enteral — Jun/2026</td>
-                  <td class="text-muted small">Ana Costa</td>
+                <tr class="linha-gasto">
+                  <td class="col-gasto-desc">Nutrição Enteral — Jun/2026</td>
+                  <td class="col-gasto-acolhido text-muted small">Ana Costa</td>
                   <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Nutrição</span></td>
                   <td class="text-muted small">Nutri Médica Ltda</td>
                   <td class="text-muted small">07/06/2026</td>
                   <td class="fw-semibold text-danger text-end">R$ 320,00</td>
                 </tr>
-                <tr>
-                  <td>Cadeira de Rodas — Aluguel</td>
-                  <td class="text-muted small">Pedro Oliveira</td>
+                <tr class="linha-gasto">
+                  <td class="col-gasto-desc">Cadeira de Rodas — Aluguel</td>
+                  <td class="col-gasto-acolhido text-muted small">Pedro Oliveira</td>
                   <td><span class="badge-nb badge-atencao" style="font-size:0.7rem;">Equipamento</span></td>
                   <td class="text-muted small">Equipa Med</td>
                   <td class="text-muted small">08/06/2026</td>
                   <td class="fw-semibold text-danger text-end">R$ 150,00</td>
                 </tr>
-                <tr>
-                  <td>Material de Curativo</td>
-                  <td class="text-muted small">Carlos Mendes</td>
+                <tr class="linha-gasto">
+                  <td class="col-gasto-desc">Material de Curativo</td>
+                  <td class="col-gasto-acolhido text-muted small">Carlos Mendes</td>
                   <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Saúde</span></td>
                   <td class="text-muted small">Cirúrgica Norte</td>
                   <td class="text-muted small">09/06/2026</td>

@@ -16,7 +16,6 @@ if (formLogin) {
     var senha   = document.getElementById('senha').value.trim();
     var erro    = document.getElementById('mensagem-erro');
 
-    /* Lista de usuários de teste */
     var usuarios = [
       { login: 'admin',       senha: 'admin123' },
       { login: 'tecnico',     senha: 'senha123' },
@@ -39,7 +38,6 @@ if (formLogin) {
     }
   });
 
-  /* Esconde o erro quando o usuário começa a digitar de novo */
   document.getElementById('usuario').addEventListener('input', function () {
     document.getElementById('mensagem-erro').classList.add('d-none');
   });
@@ -52,11 +50,11 @@ if (formLogin) {
    FILTRO DE ACOLHIDOS — busca por nome e status
    Funciona na tabela de acolhidos.html
    ------------------------------------------------------- */
-var campoBusca  = document.getElementById('busca-acolhido');
+var campoBusca   = document.getElementById('busca-acolhido');
 var filtroStatus = document.getElementById('filtro-status');
 
 function filtrarAcolhidos() {
-  var textoBusca = campoBusca ? campoBusca.value.toLowerCase() : '';
+  var textoBusca = campoBusca  ? campoBusca.value.toLowerCase()  : '';
   var statusSel  = filtroStatus ? filtroStatus.value.toLowerCase() : '';
 
   var linhas = document.querySelectorAll('.linha-acolhido');
@@ -78,6 +76,53 @@ function filtrarAcolhidos() {
 
 if (campoBusca)   campoBusca.addEventListener('input', filtrarAcolhidos);
 if (filtroStatus) filtroStatus.addEventListener('change', filtrarAcolhidos);
+
+/* -------------------------------------------------------
+   FILTRO DE DOCUMENTOS — busca pelo nome do arquivo
+   Funciona na aba Documentos de financeiro.html
+   ------------------------------------------------------- */
+var buscaDocumento = document.getElementById('busca-documento');
+
+function filtrarDocumentos() {
+  var texto = buscaDocumento ? buscaDocumento.value.toLowerCase() : '';
+  var itens = document.querySelectorAll('.linha-documento');
+
+  itens.forEach(function (item) {
+    var nome = item.querySelector('.col-doc-nome').textContent.toLowerCase();
+
+    if (nome.includes(texto)) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+if (buscaDocumento) buscaDocumento.addEventListener('input', filtrarDocumentos);
+
+/* -------------------------------------------------------
+   FILTRO DE GASTOS — busca por descrição ou acolhido
+   Funciona na aba Gastos de financeiro.html
+   ------------------------------------------------------- */
+var buscaGasto = document.getElementById('busca-gasto');
+
+function filtrarGastos() {
+  var texto = buscaGasto ? buscaGasto.value.toLowerCase() : '';
+  var linhas = document.querySelectorAll('.linha-gasto');
+
+  linhas.forEach(function (linha) {
+    var descricao = linha.querySelector('.col-gasto-desc').textContent.toLowerCase();
+    var acolhido  = linha.querySelector('.col-gasto-acolhido').textContent.toLowerCase();
+
+    if (descricao.includes(texto) || acolhido.includes(texto)) {
+      linha.style.display = '';
+    } else {
+      linha.style.display = 'none';
+    }
+  });
+}
+
+if (buscaGasto) buscaGasto.addEventListener('input', filtrarGastos);
 
 /* -------------------------------------------------------
    SIDEBAR MOBILE — botão hamburguer (opcional)
