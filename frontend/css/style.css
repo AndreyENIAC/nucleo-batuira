@@ -1,82 +1,295 @@
+/* =====================================================
+   style.css — Núcleo Batuíra
+   Estilos compartilhados por todas as páginas
+   ===================================================== */
+
+/* --- Variáveis de cor --- */
 :root {
-    --nb-azul:       #1e40af;
-    --nb-azul-claro: #3b82f6;
-    --nb-azul-bg:    #eff6ff;
-    --nb-borda:      #bfdbfe;
-    --sidebar-w:     280px;
-  }
-  * { box-sizing: border-box; }
-  body { background: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
+  --azul:       #1e40af;
+  --azul-claro: #3b82f6;
+  --azul-bg:    #eff6ff;
+  --azul-borda: #bfdbfe;
+  --cinza-bg:   #f8fafc;
+  --sidebar-w:  260px;
+}
 
-  /* ===== LAYOUT ===== */
-  #layout-principal { display: flex; height: 100vh; overflow: hidden; }
-  #sidebar-wrapper  { width: var(--sidebar-w); min-width: var(--sidebar-w); background: #fff;
-                      border-right: 1px solid #e5e7eb; overflow-y: auto; flex-shrink: 0; }
-  #conteudo-principal { flex: 1; overflow-y: auto; padding: 0; }
+/* --- Reset básico --- */
+* { box-sizing: border-box; }
+body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
 
-  /* ===== SIDEBAR ===== */
-  .sidebar-logo   { max-width: 160px; height: auto; }
-  .sidebar-usuario{ background: #fff; border: 1px solid var(--nb-borda); border-radius: 10px; padding: .75rem 1rem; }
-  .nav-item-btn {
-    display: block; width: 100%; text-align: left; background: transparent;
-    border: none; border-radius: 10px; padding: .75rem 1rem; margin-bottom: .25rem;
-    cursor: pointer; font-size: .95rem; color: #374151; transition: all .15s;
-  }
-  .nav-item-btn:hover { background: var(--nb-azul-bg); color: var(--nb-azul); }
-  .nav-item-btn.ativo { background: var(--nb-azul-bg); color: var(--nb-azul); font-weight: 600;
-                        border-left: 3px solid var(--nb-azul); }
+/* =====================================================
+   LAYOUT: sidebar + conteúdo lado a lado
+   ===================================================== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
 
-  /* ===== CARDS ===== */
-  .card-nb { background: #fff; border: 1px solid var(--nb-borda); border-radius: 14px;
-             box-shadow: 0 1px 4px rgba(30,64,175,.06); }
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
 
-  /* ===== TABS ===== */
-  .nav-tabs-nb { border-bottom: 2px solid #e5e7eb; padding-bottom: 0; }
-  .nav-tabs-nb .nav-link { color: #6b7280; border: none; border-bottom: 2px solid transparent;
-                            border-radius: 0; padding: .65rem 1.1rem; margin-bottom: -2px; }
-  .nav-tabs-nb .nav-link.active { color: var(--nb-azul); border-bottom-color: var(--nb-azul);
-                                   font-weight: 600; background: transparent; }
-  .nav-tabs-nb .nav-link:hover:not(.active) { color: var(--nb-azul-claro); background: var(--nb-azul-bg); border-radius: 8px 8px 0 0; }
+.conteudo {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
 
-  /* ===== BADGES ===== */
-  .badge-status { font-size: .78rem; padding: .35em .7em; border-radius: 8px; font-weight: 500; }
+/* =====================================================
+   SIDEBAR — cabeçalho e navegação
+   ===================================================== */
+.sidebar-cabecalho {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: var(--azul-bg);
+}
 
-  /* ===== FORMULÁRIOS ===== */
-  .form-control-nb { border: 1px solid var(--nb-borda); border-radius: 10px; }
-  .form-control-nb:focus { border-color: var(--nb-azul-claro); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+.logo-sidebar {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin-bottom: 0.75rem;
+}
 
-  /* ===== BOTÕES ===== */
-  .btn-nb-primary { background: var(--nb-azul); color: #fff; border-radius: 10px;
-                    padding: .6rem 1.2rem; border: none; cursor: pointer; font-weight: 500; }
-  .btn-nb-primary:hover { background: #1d3a9e; color: #fff; }
+.usuario-info {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
 
-  /* ===== PERFIL DO ACOLHIDO ===== */
-  .avatar-acolhido { width: 72px; height: 72px; background: var(--nb-azul-bg);
-                     border: 3px solid var(--nb-borda); border-radius: 50%;
-                     display: flex; align-items: center; justify-content: center;
-                     font-size: 2rem; flex-shrink: 0; }
+.usuario-nome {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
+  color: #1e293b;
+}
 
-  /* ===== PROGRESSO ===== */
-  .progresso-barra { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
-  .progresso-fill  { height: 100%; background: var(--nb-azul-claro); border-radius: 99px;
-                     transition: width .4s; }
+.usuario-cargo {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
 
-  /* ===== AGENDA / HORÁRIOS ===== */
-  .agenda-data  { font-size: .7rem; font-weight: 700; text-transform: uppercase;
-                  letter-spacing: .05em; color: var(--nb-azul); }
-  .hora-bloco   { background: var(--nb-azul-bg); border-left: 3px solid var(--nb-azul-claro);
-                  border-radius: 0 8px 8px 0; padding: .5rem .75rem; margin-bottom: .5rem; }
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem;
+}
 
-  /* ===== LOGIN ===== */
-  #tela-login { min-height: 100vh; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-                display: flex; align-items: center; justify-content: center; }
-  .login-card { background: #fff; border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px;
-                box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+/* Links da sidebar */
+.link-sidebar {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 0.92rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
 
-  /* ===== RESPONSIVO ===== */
-  @media (max-width: 768px) {
-    :root { --sidebar-w: 100%; }
-    #layout-principal { flex-direction: column; height: auto; }
-    #sidebar-wrapper  { width: 100%; min-width: 100%; height: auto; border-right: none; border-bottom: 1px solid #e5e7eb; }
-    #conteudo-principal { height: auto; }
-  }
+.link-sidebar:hover {
+  background: var(--azul-bg);
+  color: var(--azul);
+}
+
+.link-sidebar.ativo {
+  background: var(--azul-bg);
+  color: var(--azul);
+  font-weight: 600;
+  border-left: 3px solid var(--azul);
+}
+
+.sidebar-rodape {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* =====================================================
+   CARDS — caixas de conteúdo
+   ===================================================== */
+.card-nb {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(30, 64, 175, 0.06);
+}
+
+.card-stat {
+  background: #fff;
+  border: 1px solid var(--azul-borda);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+/* =====================================================
+   TABELAS
+   ===================================================== */
+.tabela-nb {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-nb thead th {
+  background: var(--azul-bg);
+  color: var(--azul);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--azul-borda);
+}
+
+.tabela-nb tbody td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.tabela-nb tbody tr:hover {
+  background: #fafcff;
+}
+
+/* =====================================================
+   BADGES de status
+   ===================================================== */
+.badge-ativo    { background: #dcfce7; color: #166534; }
+.badge-critico  { background: #fee2e2; color: #991b1b; }
+.badge-atencao  { background: #fef9c3; color: #854d0e; }
+.badge-alta     { background: #dbeafe; color: #1e40af; }
+.badge-aprovado { background: #dcfce7; color: #166534; }
+.badge-analise  { background: #fef9c3; color: #854d0e; }
+.badge-pendente { background: #f3f4f6; color: #374151; }
+.badge-admin    { background: #fee2e2; color: #991b1b; }
+.badge-tecnico  { background: #dcfce7; color: #166534; }
+.badge-financeiro { background: #fef9c3; color: #854d0e; }
+.badge-staff    { background: #f3f4f6; color: #374151; }
+
+.badge-nb {
+  display: inline-block;
+  padding: 0.25em 0.65em;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* =====================================================
+   FORMULÁRIOS
+   ===================================================== */
+.campo {
+  border: 1px solid var(--azul-borda);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo:focus {
+  border-color: var(--azul-claro);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* =====================================================
+   BARRA DE PROGRESSO
+   ===================================================== */
+.progresso-barra {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progresso-fill {
+  height: 100%;
+  background: var(--azul-claro);
+  border-radius: 99px;
+}
+
+/* =====================================================
+   AVATAR do acolhido
+   ===================================================== */
+.avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--azul-bg);
+  border: 2px solid var(--azul-borda);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   LOGIN — tela especial sem sidebar
+   ===================================================== */
+.bg-login {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+}
+
+.card-login {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: none;
+}
+
+.logo-login {
+  max-width: 200px;
+  height: auto;
+}
+
+/* =====================================================
+   TABS — abas de conteúdo
+   ===================================================== */
+.nav-tabs-nb {
+  border-bottom: 2px solid #e5e7eb;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.nav-tabs-nb .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: #6b7280;
+  padding: 0.6rem 1rem;
+  margin-bottom: -2px;
+  font-size: 0.88rem;
+}
+
+.nav-tabs-nb .nav-link.active {
+  color: var(--azul);
+  border-bottom-color: var(--azul);
+  font-weight: 600;
+  background: transparent;
+}
+
+.nav-tabs-nb .nav-link:hover:not(.active) {
+  background: var(--azul-bg);
+  border-radius: 6px 6px 0 0;
+  color: var(--azul-claro);
+}
+
+/* =====================================================
+   RESPONSIVO — esconde sidebar em telas pequenas
+   ===================================================== */
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; min-height: auto; }
+  .conteudo { padding: 1rem; }
+}

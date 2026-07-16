@@ -1,0 +1,481 @@
+// MER LOGICO - NUCLEO BATUIRA
+// Versao final revisada - baseada no frontend, wireframe e requisitos oficiais do projeto
+
+Table perfis_acesso {
+  id integer [pk, increment]
+  codigo varchar(30) [not null, unique, note: 'admin, technical, financial ou staff']
+  nome varchar(80) [not null]
+  descricao text
+}
+
+Table usuarios {
+  id integer [pk, increment]
+  perfil_id integer [not null]
+  nome varchar(150) [not null]
+  username varchar(60) [not null, unique]
+  email varchar(150) [unique]
+  senha_hash varchar(255) [not null]
+  telefone varchar(30)
+  profissao varchar(100)
+  conselho_profissional varchar(30)
+  registro_profissional varchar(50)
+  primeiro_acesso boolean [not null, default: true]
+  ativo boolean [not null, default: true]
+  ultimo_login datetime
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table tokens_recuperacao_senha {
+  id integer [pk, increment]
+  usuario_id integer [not null]
+  token_hash varchar(255) [not null, unique]
+  expira_em datetime [not null]
+  utilizado_em datetime
+  criado_em datetime [not null]
+}
+
+Table acolhidos {
+  id integer [pk, increment]
+  nome varchar(150) [not null]
+  data_nascimento date [not null]
+  cpf varchar(14) [unique]
+  rg varchar(30)
+  sexo varchar(30)
+  modalidade_acolhimento varchar(20) [not null, note: 'idoso ou infantil']
+  data_admissao date [not null]
+  data_saida date
+  ala varchar(50)
+  quarto varchar(30)
+  status varchar(30) [not null, note: 'estavel, monitoramento, critico, alta ou inativo']
+  tipo_atendimento varchar(50) [note: 'SUS, plano privado, particular etc.']
+  convenio varchar(150)
+  endereco text
+  foto_url text
+  observacoes text
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table familiares {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  nome varchar(150) [not null]
+  parentesco varchar(60) [not null]
+  telefone varchar(30)
+  email varchar(150)
+  endereco text
+  contato_principal boolean [not null, default: false]
+  responsavel_legal boolean [not null, default: false]
+  autorizado_visita boolean [not null, default: true]
+  frequencia_visita varchar(50)
+  ativo boolean [not null, default: true]
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table visitas {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  familiar_id integer
+  registrado_por integer [not null]
+  tipo varchar(50) [note: 'presencial, videochamada, telefonema etc.']
+  inicio datetime [not null]
+  fim datetime
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table diagnosticos {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  registrado_por integer [not null]
+  descricao varchar(255) [not null]
+  cid varchar(20)
+  data_diagnostico date
+  principal boolean [not null, default: false]
+  ativo boolean [not null, default: true]
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table alergias {
+  id integer [pk, increment]
+  nome varchar(120) [not null, unique]
+}
+
+Table acolhido_alergias {
+  acolhido_id integer [not null]
+  alergia_id integer [not null]
+  registrado_por integer [not null]
+  gravidade varchar(30)
+  observacoes text
+  registrado_em datetime [not null]
+
+  indexes {
+    (acolhido_id, alergia_id) [pk]
+  }
+}
+
+Table sinais_vitais {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  registrado_por integer [not null]
+  medido_em datetime [not null]
+  peso_kg decimal(6,2)
+  altura_m decimal(4,2)
+  pressao_sistolica integer
+  pressao_diastolica integer
+  frequencia_cardiaca integer
+  saturacao_oxigenio decimal(5,2)
+  glicemia decimal(7,2)
+  temperatura decimal(4,1)
+  observacoes text
+}
+
+Table prescricoes {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  prescrito_por integer [not null]
+  tipo_prescricao varchar(30) [not null, note: 'medica, enfermagem, nutricional ou outra']
+  medicamento varchar(180) [not null]
+  dosagem varchar(80)
+  via_administracao varchar(60)
+  frequencia varchar(100)
+  posologia text [not null]
+  data_inicio date [not null]
+  data_fim date
+  status varchar(20) [not null, note: 'ativa, suspensa, encerrada']
+  observacoes text
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table prescricao_horarios {
+  id integer [pk, increment]
+  prescricao_id integer [not null]
+  horario time [not null]
+  dose varchar(80)
+  observacoes text
+}
+
+Table administracoes_medicamentos {
+  id integer [pk, increment]
+  prescricao_horario_id integer [not null]
+  administrado_por integer [not null]
+  previsto_para datetime [not null]
+  administrado_em datetime
+  status varchar(30) [not null, note: 'pendente, administrado, recusado, omitido']
+  observacoes text
+}
+
+Table notas_clinicas {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  profissional_id integer [not null]
+  tipo varchar(80) [not null, note: 'medicina, enfermagem, psicologia etc.']
+  conteudo text [not null]
+  registrado_em datetime [not null]
+  atualizado_em datetime
+}
+
+Table pias {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  criado_por integer [not null]
+  versao varchar(20) [not null]
+  situacao_atual text [not null]
+  necessidades text [not null]
+  potencialidades text
+  data_elaboracao date [not null]
+  data_revisao date
+  status varchar(30) [not null, note: 'rascunho, ativo, revisado, encerrado']
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table pia_metas {
+  id integer [pk, increment]
+  pia_id integer [not null]
+  responsavel_id integer
+  area varchar(80) [not null]
+  objetivo text [not null]
+  acoes text [not null]
+  prazo date
+  progresso integer [not null, default: 0, note: '0 a 100']
+  status varchar(30) [not null]
+  criado_em datetime [not null]
+}
+
+Table pts {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  criado_por integer [not null]
+  diagnostico_situacao text [not null]
+  objetivos_terapeuticos text [not null]
+  avaliacao_equipe text
+  observacoes_gerais text
+  data_reuniao date [not null]
+  data_revisao date
+  status varchar(30) [not null]
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table pts_intervencoes {
+  id integer [pk, increment]
+  pts_id integer [not null]
+  responsavel_id integer
+  especialidade varchar(80) [not null]
+  responsavel_externo varchar(150)
+  intervencao text [not null]
+  frequencia varchar(100)
+  status varchar(30) [not null, default: 'ativa']
+  criado_em datetime [not null]
+}
+
+Table planos_alta {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  coordenador_id integer [not null]
+  previsao_alta date
+  tipo_alta varchar(150)
+  status varchar(30) [not null, note: 'planejamento, em_andamento, concluido, cancelado']
+  orientacoes text
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table plano_alta_etapas {
+  id integer [pk, increment]
+  plano_alta_id integer [not null]
+  descricao varchar(255) [not null]
+  ordem integer [not null]
+  status varchar(30) [not null, note: 'pendente, em_andamento, concluido']
+  concluido_em datetime
+  observacoes text
+}
+
+Table documentos {
+  id integer [pk, increment]
+  acolhido_id integer [note: 'nulo para documento institucional']
+  enviado_por integer [not null]
+  escopo varchar(20) [not null, note: 'acolhido ou institucional']
+  titulo varchar(180) [not null]
+  categoria varchar(80) [not null, note: 'documento_pessoal, relatorio_tecnico, laudo, contrato, autorizacao etc.']
+  nome_original varchar(255) [not null]
+  caminho_arquivo text [not null]
+  mime_type varchar(100)
+  tamanho_bytes integer
+  data_validade date
+  status varchar(30) [not null, default: 'ativo']
+  descricao text
+  enviado_em datetime [not null]
+}
+
+Table recursos_administrativos {
+  id integer [pk, increment]
+  documento_id integer
+  criado_por integer [not null]
+  nome varchar(180) [not null]
+  tipo varchar(100) [not null, note: 'documento_legal, licenca, certificacao, convenio, seguro etc.']
+  numero_documento varchar(100)
+  orgao_emissor varchar(150)
+  data_emissao date
+  data_validade date
+  status varchar(30) [not null, note: 'ativo, atencao, vencido ou inativo']
+  observacoes text
+  criado_em datetime [not null]
+  atualizado_em datetime [not null]
+}
+
+Table categorias_financeiras {
+  id integer [pk, increment]
+  nome varchar(100) [not null]
+  tipo varchar(20) [not null, note: 'despesa ou receita']
+  ativo boolean [not null, default: true]
+
+  indexes {
+    (nome, tipo) [unique]
+  }
+}
+
+Table gastos {
+  id integer [pk, increment]
+  acolhido_id integer [note: 'pode ser gasto geral da instituicao']
+  categoria_id integer [not null]
+  comprovante_documento_id integer
+  registrado_por integer [not null]
+  descricao varchar(255) [not null]
+  valor decimal(12,2) [not null]
+  data_gasto date [not null]
+  fornecedor varchar(150)
+  status varchar(30) [not null, default: 'registrado']
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table receitas {
+  id integer [pk, increment]
+  categoria_id integer
+  comprovante_documento_id integer
+  registrado_por integer [not null]
+  descricao varchar(255) [not null]
+  fonte varchar(150)
+  valor decimal(12,2) [not null]
+  data_recebimento date [not null]
+  status varchar(30) [not null, default: 'recebida']
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table prestacoes_contas {
+  id integer [pk, increment]
+  gerado_por integer [not null]
+  aprovado_por integer
+  relatorio_documento_id integer
+  competencia date [not null, unique, note: 'usar o primeiro dia do mes']
+  status varchar(30) [not null, note: 'rascunho, em_analise, aprovado, rejeitado']
+  gerado_em datetime [not null]
+  aprovado_em datetime
+  observacoes text
+}
+
+Table beneficios {
+  id integer [pk, increment]
+  acolhido_id integer [not null]
+  tipo_beneficio varchar(100) [not null]
+  numero_beneficio varchar(80)
+  orgao_pagador varchar(100)
+  valor_mensal decimal(12,2) [not null]
+  data_inicio date
+  data_fim date
+  status varchar(30) [not null]
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table eventos_agenda {
+  id integer [pk, increment]
+  acolhido_id integer
+  responsavel_id integer
+  criado_por integer [not null]
+  titulo varchar(180) [not null]
+  tipo varchar(80) [not null]
+  inicio datetime [not null]
+  fim datetime
+  local varchar(150)
+  status varchar(30) [not null, default: 'agendado']
+  observacoes text
+  criado_em datetime [not null]
+}
+
+Table tarefas {
+  id integer [pk, increment]
+  acolhido_id integer
+  responsavel_id integer [not null]
+  criado_por integer [not null]
+  titulo varchar(180) [not null]
+  descricao text
+  prioridade varchar(20) [not null, default: 'media']
+  prazo datetime
+  status varchar(30) [not null, default: 'pendente']
+  concluida_em datetime
+  criado_em datetime [not null]
+}
+
+Table alertas {
+  id integer [pk, increment]
+  acolhido_id integer
+  criado_por integer [not null]
+  resolvido_por integer
+  tipo varchar(80) [not null]
+  severidade varchar(20) [not null, note: 'baixa, media, alta, critica']
+  mensagem text [not null]
+  status varchar(30) [not null, default: 'aberto']
+  criado_em datetime [not null]
+  resolvido_em datetime
+}
+
+Table logs_auditoria {
+  id integer [pk, increment]
+  usuario_id integer
+  acao varchar(50) [not null]
+  tabela varchar(80) [not null]
+  registro_id integer
+  detalhes_json text
+  endereco_ip varchar(45)
+  criado_em datetime [not null]
+}
+
+Ref: usuarios.perfil_id > perfis_acesso.id
+Ref: tokens_recuperacao_senha.usuario_id > usuarios.id
+
+Ref: familiares.acolhido_id > acolhidos.id
+Ref: visitas.acolhido_id > acolhidos.id
+Ref: visitas.familiar_id > familiares.id
+Ref: visitas.registrado_por > usuarios.id
+
+Ref: diagnosticos.acolhido_id > acolhidos.id
+Ref: diagnosticos.registrado_por > usuarios.id
+Ref: acolhido_alergias.acolhido_id > acolhidos.id
+Ref: acolhido_alergias.alergia_id > alergias.id
+Ref: acolhido_alergias.registrado_por > usuarios.id
+Ref: sinais_vitais.acolhido_id > acolhidos.id
+Ref: sinais_vitais.registrado_por > usuarios.id
+
+Ref: prescricoes.acolhido_id > acolhidos.id
+Ref: prescricoes.prescrito_por > usuarios.id
+Ref: prescricao_horarios.prescricao_id > prescricoes.id
+Ref: administracoes_medicamentos.prescricao_horario_id > prescricao_horarios.id
+Ref: administracoes_medicamentos.administrado_por > usuarios.id
+Ref: notas_clinicas.acolhido_id > acolhidos.id
+Ref: notas_clinicas.profissional_id > usuarios.id
+
+Ref: pias.acolhido_id > acolhidos.id
+Ref: pias.criado_por > usuarios.id
+Ref: pia_metas.pia_id > pias.id
+Ref: pia_metas.responsavel_id > usuarios.id
+
+Ref: pts.acolhido_id > acolhidos.id
+Ref: pts.criado_por > usuarios.id
+Ref: pts_intervencoes.pts_id > pts.id
+Ref: pts_intervencoes.responsavel_id > usuarios.id
+
+Ref: planos_alta.acolhido_id > acolhidos.id
+Ref: planos_alta.coordenador_id > usuarios.id
+Ref: plano_alta_etapas.plano_alta_id > planos_alta.id
+
+Ref: documentos.acolhido_id > acolhidos.id
+Ref: documentos.enviado_por > usuarios.id
+Ref: recursos_administrativos.documento_id > documentos.id
+Ref: recursos_administrativos.criado_por > usuarios.id
+
+Ref: gastos.acolhido_id > acolhidos.id
+Ref: gastos.categoria_id > categorias_financeiras.id
+Ref: gastos.comprovante_documento_id > documentos.id
+Ref: gastos.registrado_por > usuarios.id
+
+Ref: receitas.categoria_id > categorias_financeiras.id
+Ref: receitas.comprovante_documento_id > documentos.id
+Ref: receitas.registrado_por > usuarios.id
+
+Ref: prestacoes_contas.gerado_por > usuarios.id
+Ref: prestacoes_contas.aprovado_por > usuarios.id
+Ref: prestacoes_contas.relatorio_documento_id > documentos.id
+
+Ref: beneficios.acolhido_id > acolhidos.id
+
+Ref: eventos_agenda.acolhido_id > acolhidos.id
+Ref: eventos_agenda.responsavel_id > usuarios.id
+Ref: eventos_agenda.criado_por > usuarios.id
+
+Ref: tarefas.acolhido_id > acolhidos.id
+Ref: tarefas.responsavel_id > usuarios.id
+Ref: tarefas.criado_por > usuarios.id
+
+Ref: alertas.acolhido_id > acolhidos.id
+Ref: alertas.criado_por > usuarios.id
+Ref: alertas.resolvido_por > usuarios.id
+
+Ref: logs_auditoria.usuario_id > usuarios.id
