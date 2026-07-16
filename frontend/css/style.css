@@ -293,3 +293,19 @@ body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sa
   .sidebar { width: 100%; min-height: auto; }
   .conteudo { padding: 1rem; }
 }
+
+/* =====================================================
+   Elementos adicionados na integração com a API
+   ===================================================== */
+.documento-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.documento-item:last-child { border-bottom: 0; }
+.texto-preservado { white-space: pre-wrap; }
+.tabela-scroll { overflow-x: auto; }
+.estado-carregando { color: #64748b; text-align: center; padding: 1.5rem; }

@@ -1,575 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Financeiro — Núcleo Batuíra</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão Financeira — Núcleo Batuíra</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="layout">
-
-  <!-- =====================================================
-       SIDEBAR
-       ===================================================== -->
   <aside class="sidebar">
-
-    <div class="sidebar-cabecalho">
-      <img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png"
-           alt="Núcleo Batuíra"
-           class="logo-sidebar"
-           onerror="this.style.display='none'">
-      <div class="usuario-info">
-        <p class="usuario-nome">Maria Financeiro</p>
-        <span class="usuario-cargo">Adm. Financeiro</span>
-      </div>
-    </div>
-
-    <nav class="sidebar-nav">
-      <a href="index.html"      class="link-sidebar">📊 Dashboard</a>
-      <a href="acolhidos.html"  class="link-sidebar">👥 Acolhidos</a>
-      <a href="financeiro.html" class="link-sidebar ativo">💼 Gestão Financeira</a>
-    </nav>
-
-    <div class="sidebar-rodape">
-      <a href="login.html" class="btn btn-danger w-100 btn-sm">🚪 Sair</a>
-    </div>
-
+    <div class="sidebar-cabecalho"><img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png" alt="Núcleo Batuíra" class="logo-sidebar" onerror="this.style.display='none'"><div class="usuario-info"><p class="usuario-nome">Carregando...</p><span class="usuario-cargo">—</span></div></div>
+    <nav class="sidebar-nav"><a href="index.html" class="link-sidebar">📊 Dashboard</a><a href="acolhidos.html" class="link-sidebar" data-perfis="admin,technical,staff">👥 Acolhidos</a><a href="financeiro.html" class="link-sidebar ativo" data-perfis="admin,financial">💼 Gestão Financeira</a></nav>
+    <div class="sidebar-rodape"><a href="#" class="btn btn-danger w-100 btn-sm btn-logout">🚪 Sair</a></div>
   </aside>
 
-  <!-- =====================================================
-       CONTEÚDO — Gestão Financeira
-       ===================================================== -->
   <main class="conteudo">
+    <h4 class="text-primary mb-1">💼 Gestão Financeira</h4><p class="text-muted mb-4">Documentos, gastos e prestações de contas.</p>
+    <div id="mensagem-financeiro" class="alert d-none"></div>
 
-    <h4 class="text-primary mb-1">💼 Gestão Financeira e Administrativa</h4>
-    <p class="text-muted mb-4">Documentos, gastos e prestação de contas do Núcleo Batuíra</p>
-
-    <!-- Cards de resumo financeiro -->
-    <div class="row g-3 mb-4">
-
-      <div class="col-6 col-lg-3">
-        <div class="card-stat" style="background:#f0fdf4; border-color:#bbf7d0;">
-          <div class="fs-2 mb-1">💰</div>
-          <div class="fs-4 fw-bold text-success">R$ 58.000</div>
-          <div class="small fw-semibold text-success">Receita Mensal</div>
-          <div class="text-muted" style="font-size:0.75rem;">Junho/2026</div>
-        </div>
-      </div>
-
-      <div class="col-6 col-lg-3">
-        <div class="card-stat" style="background:#fff7ed; border-color:#fed7aa;">
-          <div class="fs-2 mb-1">📊</div>
-          <div class="fs-4 fw-bold text-danger">R$ 45.200</div>
-          <div class="small fw-semibold text-danger">Despesas Mensais</div>
-          <div class="text-muted" style="font-size:0.75rem;">Junho/2026</div>
-        </div>
-      </div>
-
-      <div class="col-6 col-lg-3">
-        <div class="card-stat" style="background:#eff6ff; border-color:#bfdbfe;">
-          <div class="fs-2 mb-1">🏦</div>
-          <div class="fs-4 fw-bold text-primary">R$ 12.800</div>
-          <div class="small fw-semibold text-primary">Saldo em Conta</div>
-          <div class="text-muted" style="font-size:0.75rem;">Atualizado hoje</div>
-        </div>
-      </div>
-
-      <div class="col-6 col-lg-3">
-        <div class="card-stat" style="background:#fefce8; border-color:#fef08a;">
-          <div class="fs-2 mb-1">📋</div>
-          <div class="fs-4 fw-bold" style="color:#854d0e;">3</div>
-          <div class="small fw-semibold" style="color:#854d0e;">Docs. Pendentes</div>
-          <div class="text-muted" style="font-size:0.75rem;">Requerem ação</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Abas de conteúdo (Bootstrap Tabs) -->
     <div class="card-nb overflow-hidden">
-
-      <!-- Navegação -->
-      <ul class="nav nav-tabs-nb px-3 pt-3 mb-0 list-unstyled d-flex flex-wrap">
-        <li>
-          <a href="#documentos" class="nav-link active" data-bs-toggle="tab">📁 Documentos</a>
-        </li>
-        <li>
-          <a href="#gastos" class="nav-link" data-bs-toggle="tab">💰 Gastos</a>
-        </li>
-        <li>
-          <a href="#prestacao" class="nav-link" data-bs-toggle="tab">📊 Prestação de Contas</a>
-        </li>
-        <li>
-          <a href="#recursos" class="nav-link" data-bs-toggle="tab">🏛️ Recursos Administrativos</a>
-        </li>
+      <ul class="nav nav-tabs nav-tabs-nb px-3 pt-2">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#documentos">📁 Documentos</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#gastos">💰 Gastos</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#prestacao">📊 Prestação</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#recursos">🏛️ Recursos</button></li>
       </ul>
 
       <div class="tab-content p-4">
-
-        <!-- ===================== ABA: DOCUMENTOS ===================== -->
         <div id="documentos" class="tab-pane fade show active">
-
-          <h5 class="mb-4">📁 Documentos da Organização</h5>
-
-          <!-- Área de upload -->
-          <div class="card-nb p-4 mb-4" style="background:#eff6ff; border-color:#bfdbfe;">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <span style="font-size:2rem;">📊</span>
-              <div>
-                <p class="fw-medium mb-0">Fazer Upload de Documento</p>
-                <p class="text-muted small mb-0">Formatos aceitos: .xlsx, .xls, .csv, .pdf</p>
-              </div>
-            </div>
-            <input type="file" class="form-control" accept=".xlsx,.xls,.csv,.pdf">
-          </div>
-
-          <!-- Campo de busca Documentos -->
-          <div class="mb-3">
-            <input type="text"
-                   id="busca-documento"
-                   class="form-control"
-                   style="max-width: 320px;"
-                   placeholder="🔍 Buscar documento...">
-          </div>
-
-          <!-- Lista de documentos -->
-          <div class="card-nb">
-            <div class="p-3 border-bottom" style="background:#f8fafc;">
-              <h6 class="mb-0">Documentos Armazenados (3)</h6>
-            </div>
-
-            <div class="linha-documento d-flex align-items-center gap-3 p-3 border-bottom">
-              <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
-                          display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📊</div>
-              <div class="flex-grow-1">
-                <p class="fw-medium small mb-0 col-doc-nome">Balanço Financeiro — Maio 2026.xlsx</p>
-                <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
-                  <span class="badge bg-info text-dark">Balanço</span>
-                  <span>📅 31/05/2026</span>
-                  <span>💾 312 KB</span>
-                </div>
-              </div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-sm btn-outline-primary">👁</button>
-                <button class="btn btn-sm btn-outline-success">⬇</button>
-              </div>
-            </div>
-
-            <div class="linha-documento d-flex align-items-center gap-3 p-3 border-bottom">
-              <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
-                          display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📊</div>
-              <div class="flex-grow-1">
-                <p class="fw-medium small mb-0 col-doc-nome">Planilha de Gastos — Abril 2026.xlsx</p>
-                <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
-                  <span class="badge bg-info text-dark">Gastos</span>
-                  <span>📅 30/04/2026</span>
-                  <span>💾 198 KB</span>
-                </div>
-              </div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-sm btn-outline-primary">👁</button>
-                <button class="btn btn-sm btn-outline-success">⬇</button>
-              </div>
-            </div>
-
-            <div class="linha-documento d-flex align-items-center gap-3 p-3">
-              <div style="width:48px; height:48px; background:#f0fdf4; border-radius:12px;
-                          display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📄</div>
-              <div class="flex-grow-1">
-                <p class="fw-medium small mb-0 col-doc-nome">Relatório de Prestação de Contas — 1T 2026.pdf</p>
-                <div class="d-flex gap-3 text-muted mt-1 flex-wrap" style="font-size:0.75rem;">
-                  <span class="badge bg-warning text-dark">Relatório</span>
-                  <span>📅 15/04/2026</span>
-                  <span>💾 856 KB</span>
-                </div>
-              </div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-sm btn-outline-primary">👁</button>
-                <button class="btn btn-sm btn-outline-success">⬇</button>
-              </div>
-            </div>
-
-          </div>
+          <div class="d-flex justify-content-between mb-3"><h5>Documentos institucionais (<span id="total-documentos-institucionais">0</span>)</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-documento-institucional">➕ Enviar</button></div>
+          <div id="novo-documento-institucional" class="collapse mb-3"><form id="form-documento-institucional" class="card-nb p-3"><div class="row g-2">
+            <div class="col-md-4"><label class="form-label">Título *</label><input id="doc-inst-titulo" class="form-control" required></div>
+            <div class="col-md-3"><label class="form-label">Categoria *</label><input id="doc-inst-categoria" class="form-control" placeholder="Licença, contrato..." required></div>
+            <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="doc-inst-arquivo" type="file" class="form-control" required></div>
+          </div><button class="btn btn-success mt-3">Enviar</button></form></div>
+          <div id="lista-documentos-institucionais">Carregando...</div>
         </div>
 
-        <!-- ===================== ABA: GASTOS ===================== -->
         <div id="gastos" class="tab-pane fade">
-
-          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h5 class="mb-0">💰 Gastos dos Acolhidos</h5>
-            <button class="btn btn-primary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#form-gasto">
-              ➕ Registrar Gasto
-            </button>
-          </div>
-
-          <!-- Formulário de novo gasto (oculto) -->
-          <div class="collapse mb-4" id="form-gasto">
-            <div class="card-nb p-4" style="background:#eff6ff;">
-              <h6 class="mb-3">Registrar Novo Gasto</h6>
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">Acolhido</label>
-                  <select class="form-select">
-                    <option>Maria Silva</option>
-                    <option>José Santos</option>
-                    <option>Ana Costa</option>
-                    <option>Pedro Oliveira</option>
-                    <option>Luiza Ferreira</option>
-                    <option>Carlos Mendes</option>
-                    <option>Regina Almeida</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Descrição</label>
-                  <input type="text" class="form-control" placeholder="Ex: Medicamentos — Junho/2026">
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Valor (R$)</label>
-                  <input type="number" step="0.01" class="form-control" placeholder="0,00">
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Data</label>
-                  <input type="date" class="form-control">
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Categoria</label>
-                  <select class="form-select">
-                    <option>Saúde – Medicamentos</option>
-                    <option>Alimentação</option>
-                    <option>Higiene</option>
-                    <option>Equipamento</option>
-                    <option>Outros</option>
-                  </select>
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Fornecedor</label>
-                  <input type="text" class="form-control" placeholder="Nome do fornecedor">
-                </div>
-              </div>
-              <div class="d-flex gap-2 mt-3">
-                <button type="button" class="btn btn-success"
-                        onclick="alert('Em produção: gasto enviado ao servidor Flask.')">
-                  ✓ Salvar
-                </button>
-                <button type="button" class="btn btn-secondary"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#form-gasto">
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cards de totais -->
-          <div class="row g-3 mb-4">
-            <div class="col-md-4">
-              <div class="card-nb p-3 text-center" style="background:#eff6ff; border-color:#bfdbfe;">
-                <div class="text-primary small">Total — Maio/2026</div>
-                <div class="fw-bold fs-5">R$ 1.234,80</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card-nb p-3 text-center" style="background:#f0fdf4; border-color:#bbf7d0;">
-                <div class="text-success small">Recursos Recebidos</div>
-                <div class="fw-bold fs-5">R$ 2.500,00</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card-nb p-3 text-center" style="background:#faf5ff; border-color:#e9d5ff;">
-                <div class="text-muted small">Saldo do Mês</div>
-                <div class="fw-bold fs-5 text-success">R$ 1.265,20</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Campo de busca Gastos -->
-          <div class="mb-3">
-            <input type="text"
-                   id="busca-gasto"
-                   class="form-control"
-                   style="max-width: 320px;"
-                   placeholder="🔍 Buscar por descrição ou acolhido...">
-          </div>
-
-          <!-- Tabela de gastos -->
-          <div class="card-nb overflow-hidden">
-            <table class="tabela-nb">
-              <thead>
-                <tr>
-                  <th>Descrição</th>
-                  <th>Acolhido</th>
-                  <th>Categoria</th>
-                  <th>Fornecedor</th>
-                  <th>Data</th>
-                  <th class="text-end">Valor</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="linha-gasto">
-                  <td class="col-gasto-desc">Medicamentos — Junho/2026</td>
-                  <td class="col-gasto-acolhido text-muted small">Maria Silva</td>
-                  <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Saúde</span></td>
-                  <td class="text-muted small">Farmácia Popular</td>
-                  <td class="text-muted small">05/06/2026</td>
-                  <td class="fw-semibold text-danger text-end">R$ 485,50</td>
-                </tr>
-                <tr class="linha-gasto">
-                  <td class="col-gasto-desc">Fraldas Geriátricas — Jun/2026</td>
-                  <td class="col-gasto-acolhido text-muted small">José Santos</td>
-                  <td><span class="badge-nb badge-pendente" style="font-size:0.7rem;">Higiene</span></td>
-                  <td class="text-muted small">Distribuidor ABC</td>
-                  <td class="text-muted small">06/06/2026</td>
-                  <td class="fw-semibold text-danger text-end">R$ 189,90</td>
-                </tr>
-                <tr class="linha-gasto">
-                  <td class="col-gasto-desc">Nutrição Enteral — Jun/2026</td>
-                  <td class="col-gasto-acolhido text-muted small">Ana Costa</td>
-                  <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Nutrição</span></td>
-                  <td class="text-muted small">Nutri Médica Ltda</td>
-                  <td class="text-muted small">07/06/2026</td>
-                  <td class="fw-semibold text-danger text-end">R$ 320,00</td>
-                </tr>
-                <tr class="linha-gasto">
-                  <td class="col-gasto-desc">Cadeira de Rodas — Aluguel</td>
-                  <td class="col-gasto-acolhido text-muted small">Pedro Oliveira</td>
-                  <td><span class="badge-nb badge-atencao" style="font-size:0.7rem;">Equipamento</span></td>
-                  <td class="text-muted small">Equipa Med</td>
-                  <td class="text-muted small">08/06/2026</td>
-                  <td class="fw-semibold text-danger text-end">R$ 150,00</td>
-                </tr>
-                <tr class="linha-gasto">
-                  <td class="col-gasto-desc">Material de Curativo</td>
-                  <td class="col-gasto-acolhido text-muted small">Carlos Mendes</td>
-                  <td><span class="badge-nb badge-ativo" style="font-size:0.7rem;">Saúde</span></td>
-                  <td class="text-muted small">Cirúrgica Norte</td>
-                  <td class="text-muted small">09/06/2026</td>
-                  <td class="fw-semibold text-danger text-end">R$ 89,40</td>
-                </tr>
-                <tr style="background:#f8fafc; font-weight:600;">
-                  <td colspan="5" class="text-end">Total do período:</td>
-                  <td class="text-danger text-end">R$ 1.234,80</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
+          <div class="d-flex justify-content-between mb-3"><div><h5>Gastos</h5><p class="mb-0">Total cadastrado: <strong id="total-gastos">—</strong></p></div><button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#form-gasto-collapse">➕ Registrar gasto</button></div>
+          <div id="form-gasto-collapse" class="collapse mb-3"><form id="form-gasto" class="card-nb p-3"><div class="row g-2">
+            <div class="col-md-4"><label class="form-label">Descrição *</label><input id="gasto-descricao" class="form-control" required></div>
+            <div class="col-md-2"><label class="form-label">Valor *</label><input id="gasto-valor" type="number" step="0.01" min="0" class="form-control" required></div>
+            <div class="col-md-2"><label class="form-label">Data *</label><input id="gasto-data" type="date" class="form-control" required></div>
+            <div class="col-md-4"><label class="form-label">Categoria *</label><select id="gasto-categoria" class="form-select" required></select></div>
+            <div class="col-md-6"><label class="form-label">Acolhido</label><select id="gasto-acolhido" class="form-select"></select></div>
+            <div class="col-md-6"><label class="form-label">Fornecedor</label><input id="gasto-fornecedor" class="form-control"></div>
+          </div><button class="btn btn-success mt-3">Salvar</button></form></div>
+          <div class="card-nb tabela-scroll"><table class="tabela-nb"><thead><tr><th>Descrição</th><th>Acolhido</th><th>Categoria</th><th>Fornecedor</th><th>Data</th><th class="text-end">Valor</th></tr></thead><tbody id="corpo-gastos"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody></table></div>
         </div>
 
-        <!-- ===================== ABA: PRESTAÇÃO DE CONTAS ===================== -->
-        <div id="prestacao" class="tab-pane fade">
+        <div id="prestacao" class="tab-pane fade"><h5 class="mb-3">Prestação de contas</h5><div id="lista-prestacoes">Carregando...</div></div>
 
-          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h5 class="mb-0">📊 Prestação de Contas</h5>
-            <button class="btn btn-primary"
-                    onclick="alert('Em produção: abriria formulário de novo relatório.')">
-              ➕ Novo Relatório
-            </button>
-          </div>
-
-          <!-- Mês 1: Maio/2026 -->
-          <div class="card-nb p-4 mb-3">
-            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
-              <h6 class="mb-0">Maio / 2026</h6>
-              <span class="badge-nb badge-aprovado">✓ Aprovado</span>
-            </div>
-            <div class="row g-3 mb-3">
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Total de Gastos</p>
-                <p class="fw-medium mb-0">R$ 12.450,00</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Recursos Recebidos</p>
-                <p class="fw-medium mb-0">R$ 15.000,00</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Saldo</p>
-                <p class="fw-medium text-success mb-0">R$ 2.550,00</p>
-              </div>
-            </div>
-            <button class="btn btn-outline-primary btn-sm">📥 Baixar Relatório</button>
-          </div>
-
-          <!-- Mês 2: Abril/2026 -->
-          <div class="card-nb p-4 mb-3">
-            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
-              <h6 class="mb-0">Abril / 2026</h6>
-              <span class="badge-nb badge-aprovado">✓ Aprovado</span>
-            </div>
-            <div class="row g-3 mb-3">
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Total de Gastos</p>
-                <p class="fw-medium mb-0">R$ 11.890,50</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Recursos Recebidos</p>
-                <p class="fw-medium mb-0">R$ 15.000,00</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Saldo</p>
-                <p class="fw-medium text-success mb-0">R$ 3.109,50</p>
-              </div>
-            </div>
-            <button class="btn btn-outline-primary btn-sm">📥 Baixar Relatório</button>
-          </div>
-
-          <!-- Mês 3: Junho/2026 (em análise) -->
-          <div class="card-nb p-4">
-            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
-              <h6 class="mb-0">Junho / 2026</h6>
-              <span class="badge-nb badge-analise">⏳ Em Análise</span>
-            </div>
-            <div class="row g-3 mb-3">
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Total de Gastos</p>
-                <p class="fw-medium mb-0">R$ 8.234,80</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Recursos Recebidos</p>
-                <p class="fw-medium mb-0">R$ 15.000,00</p>
-              </div>
-              <div class="col-md-4">
-                <p class="text-muted small mb-0">Saldo (parcial)</p>
-                <p class="fw-medium text-success mb-0">R$ 6.765,20</p>
-              </div>
-            </div>
-            <button class="btn btn-outline-primary btn-sm">📥 Baixar Relatório</button>
-          </div>
-
-        </div>
-
-        <!-- ===================== ABA: RECURSOS ADMINISTRATIVOS ===================== -->
         <div id="recursos" class="tab-pane fade">
-
-          <h5 class="mb-4">🏛️ Recursos Administrativos</h5>
-
-          <!-- Documentação institucional -->
-          <div class="card-nb mb-4">
-            <div class="p-3 border-bottom d-flex justify-content-between align-items-center"
-                 style="background:#f8fafc;">
-              <h6 class="mb-0">Documentação Institucional</h6>
-              <button class="btn btn-primary btn-sm"
-                      onclick="alert('Em produção: abre formulário de novo documento.')">
-                ➕ Adicionar Documento
-              </button>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap gap-2">
-              <div>
-                <p class="fw-medium small mb-0">CNPJ — Núcleo Batuíra</p>
-                <p class="text-muted mb-0" style="font-size:0.75rem;">Documento Legal &nbsp;·&nbsp; Validade: Permanente</p>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge-nb badge-ativo">Ativo</span>
-                <button class="btn btn-link btn-sm p-0">Ver</button>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap gap-2">
-              <div>
-                <p class="fw-medium small mb-0">Alvará de Funcionamento 2026</p>
-                <p class="text-muted mb-0" style="font-size:0.75rem;">Licença Municipal &nbsp;·&nbsp; Validade: 31/12/2026</p>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge-nb badge-ativo">Ativo</span>
-                <button class="btn btn-link btn-sm p-0">Ver</button>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap gap-2">
-              <div>
-                <p class="fw-medium small mb-0">CEBAS — Certificação</p>
-                <p class="text-muted mb-0" style="font-size:0.75rem;">Certificação Federal &nbsp;·&nbsp; Validade: 15/08/2026</p>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge-nb badge-atencao">Atenção</span>
-                <button class="btn btn-link btn-sm p-0">Ver</button>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap gap-2">
-              <div>
-                <p class="fw-medium small mb-0">Convênio Prefeitura de Guarulhos</p>
-                <p class="text-muted mb-0" style="font-size:0.75rem;">Convênio Público &nbsp;·&nbsp; Validade: 30/06/2027</p>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge-nb badge-ativo">Ativo</span>
-                <button class="btn btn-link btn-sm p-0">Ver</button>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 flex-wrap gap-2">
-              <div>
-                <p class="fw-medium small mb-0">Seguro de Responsabilidade Civil</p>
-                <p class="text-muted mb-0" style="font-size:0.75rem;">Seguro &nbsp;·&nbsp; Validade: 01/01/2027</p>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge-nb badge-ativo">Ativo</span>
-                <button class="btn btn-link btn-sm p-0">Ver</button>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Benefícios dos acolhidos -->
-          <div class="card-nb">
-            <div class="p-3 border-bottom" style="background:#f8fafc;">
-              <h6 class="mb-0">Benefícios e Auxílios dos Acolhidos</h6>
-            </div>
-
-            <table class="tabela-nb">
-              <thead>
-                <tr>
-                  <th>Acolhido</th>
-                  <th>Benefício</th>
-                  <th>Valor / mês</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="fw-medium">Maria Silva</td>
-                  <td class="text-muted small">BPC/LOAS</td>
-                  <td class="fw-semibold">R$ 1.412,00</td>
-                  <td><span class="badge-nb badge-ativo">Ativo</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-medium">José Santos</td>
-                  <td class="text-muted small">Aposentadoria INSS</td>
-                  <td class="fw-semibold">R$ 1.800,00</td>
-                  <td><span class="badge-nb badge-ativo">Ativo</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-medium">Ana Costa</td>
-                  <td class="text-muted small">Pensão por Morte</td>
-                  <td class="fw-semibold">R$ 1.412,00</td>
-                  <td><span class="badge-nb badge-ativo">Ativo</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-medium">Pedro Oliveira</td>
-                  <td class="text-muted small">BPC/LOAS</td>
-                  <td class="fw-semibold">R$ 1.412,00</td>
-                  <td><span class="badge-nb badge-pendente">Pendente</span></td>
-                </tr>
-              </tbody>
-            </table>
-
-          </div>
-
+          <h5 class="mb-3">Recursos administrativos</h5><div id="lista-recursos" class="card-nb p-3 mb-4">Carregando...</div>
+          <h5 class="mb-3">Benefícios dos acolhidos</h5><div class="card-nb tabela-scroll"><table class="tabela-nb"><thead><tr><th>Acolhido</th><th>Benefício</th><th>Valor mensal</th><th>Status</th></tr></thead><tbody id="corpo-beneficios"></tbody></table></div>
         </div>
-        <!-- fim das abas -->
-
       </div>
     </div>
-
   </main>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/main.js"></script>
+<script src="js/api.js"></script><script src="js/main.js"></script><script src="js/financeiro.js"></script>
 </body>
 </html>
