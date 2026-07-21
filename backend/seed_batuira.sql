@@ -4,9 +4,9 @@ BEGIN TRANSACTION;
 
 INSERT INTO perfis_acesso (codigo, nome, descricao) VALUES
     ('admin', 'Administrador', 'Acesso completo ao sistema.'),
-    ('technical', 'Equipe Técnica', 'Acesso clínico, assistencial, PIA, PTS e acolhidos.'),
-    ('financial', 'Financeiro', 'Acesso ao módulo financeiro, documentos e prestações de contas.'),
-    ('staff', 'Funcionário', 'Acesso operacional, agenda, tarefas e consulta de acolhidos.');
+    ('technical', 'Equipe Técnica', 'Acesso de edição à Gestão de Saúde e aos acolhidos.'),
+    ('financial', 'Equipe Institucional', 'Acesso de edição à Gestão Institucional.'),
+    ('staff', 'Funcionário', 'Acesso somente para leitura a todos os módulos, exceto usuários.');
 
 INSERT INTO categorias_financeiras (nome, tipo) VALUES
     ('Saúde - Medicamentos', 'despesa'),
@@ -16,7 +16,7 @@ INSERT INTO categorias_financeiras (nome, tipo) VALUES
     ('Alimentação', 'despesa'),
     ('Manutenção', 'despesa'),
     ('Transporte', 'despesa'),
-    ('Outras despesas', 'despesa'),
+    ('Outros', 'despesa'),
     ('Verba municipal', 'receita'),
     ('Convênio público', 'receita'),
     ('Doações', 'receita'),

@@ -45,6 +45,20 @@ CREATE TABLE tokens_recuperacao_senha (
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE solicitacoes_recuperacao_senha (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pendente'
+        CHECK (status IN ('pendente', 'resolvida', 'cancelada')),
+    solicitado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    resolvido_por INTEGER,
+    resolvido_em TEXT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (resolvido_por) REFERENCES usuarios(id)
+        ON UPDATE CASCADE ON DELETE SET NULL
+);
+
 CREATE TABLE acolhidos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
@@ -52,7 +66,7 @@ CREATE TABLE acolhidos (
     cpf TEXT UNIQUE,
     rg TEXT,
     sexo TEXT,
-    modalidade_acolhimento TEXT NOT NULL
+    modalidade_acolhimento TEXT NOT NULL DEFAULT 'idoso'
         CHECK (modalidade_acolhimento IN ('idoso', 'infantil')),
     data_admissao TEXT NOT NULL,
     data_saida TEXT,
@@ -497,6 +511,8 @@ CREATE TABLE eventos_agenda (
     criado_por INTEGER NOT NULL,
     titulo TEXT NOT NULL,
     tipo TEXT NOT NULL,
+    setor TEXT NOT NULL DEFAULT 'geral'
+        CHECK (setor IN ('saude', 'institucional', 'geral')),
     inicio TEXT NOT NULL,
     fim TEXT,
     local TEXT,
@@ -547,6 +563,8 @@ CREATE TABLE alertas (
         CHECK (status IN ('aberto', 'em_tratamento', 'resolvido', 'cancelado')),
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     resolvido_em TEXT,
+    origem_tipo TEXT,
+    origem_id INTEGER,
     FOREIGN KEY (acolhido_id) REFERENCES acolhidos(id)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (criado_por) REFERENCES usuarios(id)
@@ -570,6 +588,8 @@ CREATE TABLE logs_auditoria (
 
 -- Índices de busca e relacionamento
 CREATE INDEX idx_usuarios_perfil ON usuarios(perfil_id);
+CREATE INDEX idx_solicitacoes_recuperacao_usuario
+    ON solicitacoes_recuperacao_senha(usuario_id, status);
 CREATE INDEX idx_usuarios_ativo ON usuarios(ativo);
 CREATE INDEX idx_tokens_usuario ON tokens_recuperacao_senha(usuario_id);
 CREATE INDEX idx_tokens_expiracao ON tokens_recuperacao_senha(expira_em);
@@ -605,6 +625,7 @@ CREATE INDEX idx_planos_alta_acolhido ON planos_alta(acolhido_id);
 CREATE INDEX idx_etapas_plano_alta ON plano_alta_etapas(plano_alta_id, ordem);
 
 CREATE INDEX idx_documentos_acolhido ON documentos(acolhido_id);
+CREATE INDEX idx_eventos_setor_inicio ON eventos_agenda(setor, inicio);
 CREATE INDEX idx_documentos_categoria ON documentos(categoria);
 CREATE INDEX idx_documentos_validade ON documentos(data_validade);
 CREATE INDEX idx_recursos_validade ON recursos_administrativos(data_validade, status);
@@ -622,6 +643,7 @@ CREATE INDEX idx_tarefas_responsavel_status ON tarefas(responsavel_id, status);
 CREATE INDEX idx_tarefas_prazo ON tarefas(prazo);
 CREATE INDEX idx_alertas_status_severidade ON alertas(status, severidade);
 CREATE INDEX idx_alertas_acolhido ON alertas(acolhido_id);
+CREATE INDEX idx_alertas_origem ON alertas(origem_tipo, origem_id);
 CREATE INDEX idx_logs_tabela_registro ON logs_auditoria(tabela, registro_id);
 CREATE INDEX idx_logs_usuario_data ON logs_auditoria(usuario_id, criado_em);
 

@@ -16,8 +16,10 @@
     </div>
     <nav class="sidebar-nav">
       <a href="index.html" class="link-sidebar">📊 Dashboard</a>
-      <a href="acolhidos.html" class="link-sidebar ativo" data-perfis="admin,technical,staff">👥 Acolhidos</a>
-      <a href="financeiro.html" class="link-sidebar" data-perfis="admin,financial">💼 Gestão Financeira</a>
+      <a href="agenda.html" class="link-sidebar">📅 Agenda</a>
+      <a href="acolhidos.html" class="link-sidebar ativo" data-perfis="admin,technical,staff">🩺 Gestão de Saúde</a>
+      <a href="financeiro.html" class="link-sidebar" data-perfis="admin,financial,staff">🏛️ Gestão Institucional</a>
+      <a href="usuarios.html" class="link-sidebar" data-perfis="admin">🔐 Gerenciar Usuários</a>
     </nav>
     <div class="sidebar-rodape"><a href="#" class="btn btn-danger w-100 btn-sm btn-logout">🚪 Sair</a></div>
   </aside>
@@ -25,11 +27,11 @@
   <main class="conteudo">
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
       <div><h4 class="text-primary mb-1">👥 Acolhidos</h4><p id="quantidade-acolhidos" class="text-muted mb-0">Carregando...</p></div>
-      <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#form-novo-acolhido">➕ Novo Acolhido</button>
+      <button class="btn btn-primary" data-perfis="admin,technical" data-bs-toggle="collapse" data-bs-target="#form-novo-acolhido">➕ Novo Acolhido</button>
     </div>
     <div id="mensagem-acolhidos" class="alert d-none"></div>
 
-    <div class="collapse mb-4" id="form-novo-acolhido">
+    <div class="collapse mb-4" id="form-novo-acolhido" data-perfis="admin,technical">
       <div class="card-nb p-4" style="background:#eff6ff;">
         <h6 class="mb-3">Cadastrar novo acolhido</h6>
         <form id="form-cadastro-acolhido">
@@ -37,9 +39,9 @@
             <div class="col-md-6"><label class="form-label">Nome completo *</label><input id="acolhido-nome" class="form-control" required></div>
             <div class="col-md-3"><label class="form-label">Data de nascimento *</label><input id="data-nascimento" type="date" class="form-control" required></div>
             <div class="col-md-3"><label class="form-label">Data de admissão *</label><input id="data-admissao" type="date" class="form-control" required></div>
-            <div class="col-md-3"><label class="form-label">Modalidade *</label><select id="modalidade" class="form-select" required><option value="idoso">Pessoa idosa</option><option value="infantil">Infantil</option></select></div>
+            <div class="col-md-3"><label class="form-label">CPF *</label><input id="acolhido-cpf" class="form-control" maxlength="14" placeholder="000.000.000-00" required></div>
             <div class="col-md-3"><label class="form-label">Quarto</label><input id="quarto" class="form-control" placeholder="101-A"></div>
-            <div class="col-md-3"><label class="form-label">Status</label><select id="status" class="form-select"><option value="estavel">Estável</option><option value="monitoramento">Em atenção</option><option value="critico">Crítico</option><option value="alta">Alta</option></select></div>
+            <div class="col-md-3"><label class="form-label">Status *</label><select id="status" class="form-select" required><option value="estavel">Estável</option><option value="monitoramento">Em atenção</option><option value="critico">Crítico</option><option value="alta">Alta</option><option value="inativo">Inativo</option></select></div>
             <div class="col-md-3"><label class="form-label">Tipo</label><select id="tipo-atendimento" class="form-select"><option value="Convênio SUS">Convênio SUS</option><option value="Plano Privado">Plano Privado</option><option value="Particular">Particular</option></select></div>
             <div class="col-md-12"><label class="form-label">Condição principal</label><input id="condicao-principal" class="form-control" placeholder="Diagnóstico principal"></div>
           </div>
@@ -54,13 +56,13 @@
     <div class="d-flex gap-2 mb-4 flex-wrap">
       <input id="busca-acolhido" class="form-control" style="max-width:280px" placeholder="🔍 Buscar por nome...">
       <select id="filtro-status" class="form-select" style="max-width:190px">
-        <option value="">Todos os status</option><option value="estavel">Estável</option><option value="monitoramento">Em atenção</option><option value="critico">Crítico</option><option value="alta">Alta</option>
+        <option value="">Ativos e em acompanhamento</option><option value="estavel">Estável</option><option value="monitoramento">Monitoramento</option><option value="critico">Crítico</option><option value="alta">Alta</option><option value="inativo">Inativo</option>
       </select>
     </div>
 
     <div class="card-nb tabela-scroll">
       <table class="tabela-nb">
-        <thead><tr><th>Nome</th><th>Idade</th><th>Quarto</th><th>Condição</th><th>Tipo</th><th>Última consulta</th><th>Status</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Nome</th><th>CPF</th><th>Idade</th><th>Quarto</th><th>Condição</th><th>Última consulta</th><th>Status</th><th>Ações</th></tr></thead>
         <tbody id="corpo-acolhidos"><tr><td colspan="8" class="estado-carregando">Carregando...</td></tr></tbody>
       </table>
     </div>

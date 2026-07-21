@@ -18,7 +18,9 @@ SCHEMA_PATH = BASE_DIR / "schema_batuira.sql"
 SEED_PATH = BASE_DIR / "seed_batuira.sql"
 
 
-def inserir_usuario(conn, perfil, nome, username, senha, profissao=None, registro=None):
+def inserir_usuario(
+    conn, perfil, nome, username, senha, profissao=None, registro=None, primeiro_acesso=0
+):
     perfil_id = conn.execute(
         "SELECT id FROM perfis_acesso WHERE codigo = ?", (perfil,)
     ).fetchone()[0]
@@ -27,7 +29,7 @@ def inserir_usuario(conn, perfil, nome, username, senha, profissao=None, registr
         INSERT INTO usuarios (
             perfil_id, nome, username, email, senha_hash,
             profissao, registro_profissional, primeiro_acesso, ativo
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
         """,
         (
             perfil_id,
@@ -37,6 +39,7 @@ def inserir_usuario(conn, perfil, nome, username, senha, profissao=None, registr
             generate_password_hash(senha),
             profissao,
             registro,
+            primeiro_acesso,
         ),
     )
     return cursor.lastrowid
@@ -53,7 +56,13 @@ def criar_banco():
 
         # Usuários para teste, iguais aos exibidos no frontend.
         admin_id = inserir_usuario(
-            conn, "admin", "Ana Administradora", "admin", "admin123", "Administradora"
+            conn,
+            "admin",
+            "Ana Administradora",
+            "admin",
+            "admin123",
+            "Administradora",
+            primeiro_acesso=1,
         )
         tecnico_id = inserir_usuario(
             conn,
@@ -373,8 +382,8 @@ def criar_banco():
             """
             INSERT INTO eventos_agenda (
                 acolhido_id, responsavel_id, criado_por,
-                titulo, tipo, inicio, fim, local
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                titulo, tipo, setor, inicio, fim, local
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 maria_id,
@@ -382,11 +391,33 @@ def criar_banco():
                 admin_id,
                 "Consulta - Maria Silva",
                 "Consulta Médica",
+                "saude",
                 amanha.replace(hour=9, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S"),
                 amanha.replace(hour=10, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S"),
                 "Consultório 1",
             ),
         )
+        depois_de_amanha = datetime.now() + timedelta(days=2)
+        conn.execute(
+            """
+            INSERT INTO eventos_agenda (
+                acolhido_id, responsavel_id, criado_por,
+                titulo, tipo, setor, inicio, fim, local
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                None,
+                financeiro_id,
+                admin_id,
+                "Reunião de prestação de contas",
+                "Reunião",
+                "institucional",
+                depois_de_amanha.replace(hour=14, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S"),
+                depois_de_amanha.replace(hour=15, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S"),
+                "Sala administrativa",
+            ),
+        )
+
         conn.execute(
             """
             INSERT INTO alertas (

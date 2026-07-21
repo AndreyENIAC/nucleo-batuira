@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil do Acolhido — Núcleo Batuíra</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
@@ -13,7 +14,13 @@
       <img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png" alt="Núcleo Batuíra" class="logo-sidebar" onerror="this.style.display='none'">
       <div class="usuario-info"><p class="usuario-nome">Carregando...</p><span class="usuario-cargo">—</span></div>
     </div>
-    <nav class="sidebar-nav"><a href="index.html" class="link-sidebar">📊 Dashboard</a><a href="acolhidos.html" class="link-sidebar ativo">👥 Acolhidos</a><a href="financeiro.html" class="link-sidebar" data-perfis="admin,financial">💼 Gestão Financeira</a></nav>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="link-sidebar">📊 Dashboard</a>
+      <a href="agenda.html" class="link-sidebar">📅 Agenda</a>
+      <a href="acolhidos.html" class="link-sidebar ativo" data-perfis="admin,technical,staff">🩺 Gestão de Saúde</a>
+      <a href="financeiro.html" class="link-sidebar" data-perfis="admin,financial,staff">🏛️ Gestão Institucional</a>
+      <a href="usuarios.html" class="link-sidebar" data-perfis="admin">🔐 Gerenciar Usuários</a>
+    </nav>
     <div class="sidebar-rodape"><a href="#" class="btn btn-danger w-100 btn-sm btn-logout">🚪 Sair</a></div>
   </aside>
 
@@ -25,7 +32,10 @@
       <div class="d-flex gap-3 align-items-start flex-wrap">
         <div class="avatar">👤</div>
         <div class="flex-grow-1">
-          <div class="d-flex gap-2 align-items-center"><h4 id="perfil-nome" class="mb-0">Carregando...</h4><span id="perfil-status"></span></div>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <h4 id="perfil-nome" class="mb-0">Carregando...</h4>
+            <span id="perfil-status"></span>
+          </div>
           <p id="perfil-resumo" class="text-muted mb-3">—</p>
           <div class="row g-2 small">
             <div class="col-md-3"><strong>CPF:</strong> <span id="perfil-cpf">—</span></div>
@@ -34,65 +44,227 @@
             <div class="col-md-3"><strong>Responsável:</strong> <span id="perfil-responsavel">—</span></div>
             <div class="col-12"><strong>Alergias:</strong> <span id="perfil-alergias">—</span></div>
           </div>
+
+          <div class="mt-3 d-flex gap-2 align-items-end flex-wrap" data-perfis="admin,technical">
+            <div>
+              <label for="status-rapido" class="form-label small mb-1">Alterar situação</label>
+              <select id="status-rapido" class="form-select form-select-sm">
+                <option value="estavel">Estável</option>
+                <option value="monitoramento">Monitoramento</option>
+                <option value="critico">Crítico</option>
+                <option value="alta">Alta</option>
+                <option value="inativo">Inativo</option>
+              </select>
+            </div>
+            <button id="btn-salvar-status" type="button" class="btn btn-outline-primary btn-sm">Salvar situação</button>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="card-nb overflow-hidden">
       <ul class="nav nav-tabs nav-tabs-nb px-3 pt-2" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#prescricoes">💊 Prescrições</button></li>
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dados">✏️ Dados</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#prescricoes">💊 Prescrições e alergias</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#notas">📋 Notas</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pia-pts">📌 PIA / PTS</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#familia">👨‍👩‍👧 Família</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#alta">🏠 Alta</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#beneficios">💰 Benefícios</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#documentos">📁 Documentos</button></li>
       </ul>
 
       <div class="tab-content p-4">
-        <div id="prescricoes" class="tab-pane fade show active">
-          <div class="d-flex justify-content-between mb-3"><h5>Prescrições médicas</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-prescricao">➕ Nova</button></div>
-          <div id="nova-prescricao" class="collapse mb-3"><form id="form-prescricao" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-3"><label class="form-label">Tipo *</label><select id="prescricao-tipo" class="form-select" required><option value="medica">Médica</option><option value="enfermagem">Enfermagem</option></select></div>
-            <div class="col-md-4"><label class="form-label">Medicamento *</label><input id="prescricao-medicamento" class="form-control" required></div>
-            <div class="col-md-2"><label class="form-label">Dosagem</label><input id="prescricao-dosagem" class="form-control"></div>
-            <div class="col-md-3"><label class="form-label">Data inicial *</label><input id="prescricao-data-inicio" type="date" class="form-control" required></div>
-            <div class="col-12"><label class="form-label">Posologia *</label><input id="prescricao-posologia" class="form-control" required></div>
-          </div><button class="btn btn-success mt-3">Salvar</button></form></div>
-          <div id="lista-prescricoes" class="estado-carregando">Carregando...</div>
+        <div id="dados" class="tab-pane fade show active">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Dados do acolhido</h5>
+            <span class="small text-muted">O funcionário possui somente leitura.</span>
+          </div>
+          <form id="form-atualizar-acolhido">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label">Nome completo *</label><input id="editar-nome" class="form-control" required></div>
+              <div class="col-md-3"><label class="form-label">CPF *</label><input id="editar-cpf" class="form-control" maxlength="14" required></div>
+              <div class="col-md-3"><label class="form-label">Data de nascimento *</label><input id="editar-nascimento" type="date" class="form-control" required></div>
+              <div class="col-md-3"><label class="form-label">Data de admissão *</label><input id="editar-admissao" type="date" class="form-control" required></div>
+              <div class="col-md-3"><label class="form-label">Ala</label><input id="editar-ala" class="form-control"></div>
+              <div class="col-md-3"><label class="form-label">Quarto</label><input id="editar-quarto" class="form-control"></div>
+              <div class="col-md-3"><label class="form-label">Status *</label><select id="editar-status" class="form-select" required><option value="estavel">Estável</option><option value="monitoramento">Monitoramento</option><option value="critico">Crítico</option><option value="alta">Alta</option><option value="inativo">Inativo</option></select></div>
+              <div class="col-md-4"><label class="form-label">Tipo de atendimento</label><input id="editar-tipo-atendimento" class="form-control"></div>
+              <div class="col-md-4"><label class="form-label">Convênio</label><input id="editar-convenio" class="form-control"></div>
+              <div class="col-md-4"><label class="form-label">Condição principal</label><input id="editar-condicao" class="form-control"></div>
+              <div class="col-md-8"><label class="form-label">Endereço</label><input id="editar-endereco" class="form-control"></div>
+              <div class="col-md-4"><label class="form-label">RG</label><input id="editar-rg" class="form-control"></div>
+              <div class="col-12"><label class="form-label">Observações</label><textarea id="editar-observacoes" class="form-control" rows="3"></textarea></div>
+            </div>
+            <button class="btn btn-success mt-3" data-perfis="admin,technical">Salvar alterações</button>
+            <button id="btn-inativar-acolhido" type="button" class="btn btn-outline-danger mt-3" data-perfis="admin,technical">Inativar acolhido</button>
+          </form>
+          <div id="dados-somente-leitura" class="text-muted d-none">Você pode consultar os dados acima, mas não possui permissão para alterá-los.</div>
+        </div>
+
+        <div id="prescricoes" class="tab-pane fade">
+          <section class="mb-5">
+            <div class="d-flex justify-content-between mb-3"><h5>Alergias</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-alergia">➕ Adicionar</button></div>
+            <div id="nova-alergia" class="collapse mb-3" data-perfis="admin,technical">
+              <form id="form-alergia" class="card-nb p-3">
+                <div class="row g-2">
+                  <div class="col-md-5"><label class="form-label">Alergia *</label><input id="alergia-nome" class="form-control" list="catalogo-alergias" required><datalist id="catalogo-alergias"></datalist></div>
+                  <div class="col-md-3"><label class="form-label">Gravidade</label><select id="alergia-gravidade" class="form-select"><option value="">Não informada</option><option value="leve">Leve</option><option value="moderada">Moderada</option><option value="grave">Grave</option></select></div>
+                  <div class="col-md-4"><label class="form-label">Observações</label><input id="alergia-observacoes" class="form-control"></div>
+                </div>
+                <button class="btn btn-success mt-3">Salvar alergia</button>
+              </form>
+            </div>
+            <div id="lista-alergias">Carregando...</div>
+          </section>
+
+          <section>
+            <div class="d-flex justify-content-between mb-3"><h5>Prescrições</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-prescricao">➕ Nova</button></div>
+            <div id="nova-prescricao" class="collapse mb-3" data-perfis="admin,technical">
+              <form id="form-prescricao" class="card-nb p-3">
+                <div class="row g-2">
+                  <div class="col-md-3"><label class="form-label">Tipo *</label><select id="prescricao-tipo" class="form-select" required><option value="medica">Médica</option><option value="enfermagem">Enfermagem</option><option value="nutricional">Nutricional</option><option value="outra">Outra</option></select></div>
+                  <div class="col-md-4"><label class="form-label">Medicamento *</label><input id="prescricao-medicamento" class="form-control" required></div>
+                  <div class="col-md-2"><label class="form-label">Dosagem</label><input id="prescricao-dosagem" class="form-control"></div>
+                  <div class="col-md-3"><label class="form-label">Data inicial *</label><input id="prescricao-data-inicio" type="date" class="form-control" required></div>
+                  <div class="col-md-4"><label class="form-label">Via</label><input id="prescricao-via" class="form-control" placeholder="Oral, tópica..."></div>
+                  <div class="col-md-4"><label class="form-label">Frequência</label><input id="prescricao-frequencia" class="form-control" placeholder="8 em 8 horas"></div>
+                  <div class="col-md-4"><label class="form-label">Status</label><select id="prescricao-status" class="form-select"><option value="ativa">Ativa</option><option value="suspensa">Suspensa</option><option value="encerrada">Encerrada</option></select></div>
+                  <div class="col-12"><label class="form-label">Posologia *</label><input id="prescricao-posologia" class="form-control" required></div>
+                  <div class="col-12"><label class="form-label">Observações</label><textarea id="prescricao-observacoes" class="form-control" rows="2"></textarea></div>
+                </div>
+                <button class="btn btn-success mt-3">Salvar prescrição</button>
+              </form>
+            </div>
+            <div id="lista-prescricoes" class="estado-carregando">Carregando...</div>
+          </section>
         </div>
 
         <div id="notas" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><h5>Notas clínicas</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-nota">➕ Nova</button></div>
-          <div id="nova-nota" class="collapse mb-3"><form id="form-nota" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-4"><label class="form-label">Tipo *</label><select id="nota-tipo" class="form-select"><option>Evolução Médica</option><option>Evolução de Enfermagem</option><option>Evolução de Psicologia</option><option>Relatório Técnico</option></select></div>
-            <div class="col-md-8"><label class="form-label">Conteúdo *</label><textarea id="nota-conteudo" class="form-control" rows="3" required></textarea></div>
-          </div><button class="btn btn-success mt-3">Salvar</button></form></div>
+          <div class="d-flex justify-content-between mb-3"><h5>Notas clínicas</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-nota">➕ Nova</button></div>
+          <div id="nova-nota" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-nota" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Tipo *</label><select id="nota-tipo" class="form-select"><option>Evolução Médica</option><option>Evolução de Enfermagem</option><option>Evolução de Psicologia</option><option>Relatório Técnico</option></select></div>
+                <div class="col-md-8"><label class="form-label">Conteúdo *</label><textarea id="nota-conteudo" class="form-control" rows="3" required></textarea></div>
+                <div class="col-md-4"><div class="form-check mt-2"><input id="nota-alerta" class="form-check-input" type="checkbox"><label class="form-check-label" for="nota-alerta">Mostrar como alerta no dashboard</label></div></div>
+                <div class="col-md-4"><label class="form-label">Severidade do alerta</label><select id="nota-severidade" class="form-select"><option value="baixa">Baixa</option><option value="media" selected>Média</option><option value="alta">Alta</option><option value="critica">Crítica</option></select></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar nota</button>
+            </form>
+          </div>
           <div id="lista-notas" class="estado-carregando">Carregando...</div>
         </div>
 
-        <div id="pia-pts" class="tab-pane fade"><h5>PIA</h5><div id="conteudo-pia" class="mb-4">Carregando...</div><h5>PTS</h5><div id="conteudo-pts">Carregando...</div></div>
+        <div id="pia-pts" class="tab-pane fade">
+          <div class="d-flex justify-content-between mb-3"><h5>PIA</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pia">➕ Novo PIA</button></div>
+          <div id="novo-pia" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-pia" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-2"><label class="form-label">Versão *</label><input id="pia-versao" class="form-control" placeholder="v2" required></div>
+                <div class="col-md-3"><label class="form-label">Data *</label><input id="pia-data" type="date" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Revisão</label><input id="pia-revisao" type="date" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Status</label><select id="pia-status" class="form-select"><option value="rascunho">Rascunho</option><option value="ativo" selected>Ativo</option><option value="revisado">Revisado</option><option value="encerrado">Encerrado</option></select></div>
+                <div class="col-md-6"><label class="form-label">Situação atual *</label><textarea id="pia-situacao" class="form-control" rows="2" required></textarea></div>
+                <div class="col-md-6"><label class="form-label">Necessidades *</label><textarea id="pia-necessidades" class="form-control" rows="2" required></textarea></div>
+                <div class="col-12"><label class="form-label">Potencialidades</label><textarea id="pia-potencialidades" class="form-control" rows="2"></textarea></div>
+                <div class="col-12"><hr><strong>Primeira meta (opcional)</strong></div>
+                <div class="col-md-3"><label class="form-label">Área</label><input id="pia-meta-area" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Objetivo</label><input id="pia-meta-objetivo" class="form-control"></div>
+                <div class="col-md-5"><label class="form-label">Ações</label><input id="pia-meta-acoes" class="form-control"></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar PIA</button>
+            </form>
+          </div>
+          <div id="conteudo-pia" class="mb-5">Carregando...</div>
+
+          <div class="d-flex justify-content-between mb-3"><h5>PTS</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pts">➕ Novo PTS</button></div>
+          <div id="novo-pts" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-pts" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-3"><label class="form-label">Data da reunião *</label><input id="pts-data" type="date" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Revisão</label><input id="pts-revisao" type="date" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Status *</label><select id="pts-status" class="form-select"><option value="ativo">Ativo</option><option value="em_revisao">Em revisão</option><option value="encerrado">Encerrado</option></select></div>
+                <div class="col-md-6"><label class="form-label">Diagnóstico da situação *</label><textarea id="pts-diagnostico" class="form-control" rows="2" required></textarea></div>
+                <div class="col-md-6"><label class="form-label">Objetivos terapêuticos *</label><textarea id="pts-objetivos" class="form-control" rows="2" required></textarea></div>
+                <div class="col-12"><label class="form-label">Avaliação da equipe</label><textarea id="pts-avaliacao" class="form-control" rows="2"></textarea></div>
+                <div class="col-12"><hr><strong>Primeira intervenção (opcional)</strong></div>
+                <div class="col-md-3"><label class="form-label">Especialidade</label><input id="pts-especialidade" class="form-control" placeholder="Fisioterapia"></div>
+                <div class="col-md-6"><label class="form-label">Intervenção</label><input id="pts-intervencao" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Frequência</label><input id="pts-frequencia" class="form-control"></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar PTS</button>
+            </form>
+          </div>
+          <div id="conteudo-pts">Carregando...</div>
+        </div>
 
         <div id="familia" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><h5>Vínculos familiares</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-familiar">➕ Adicionar</button></div>
-          <div id="novo-familiar" class="collapse mb-3"><form id="form-familiar" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-4"><label class="form-label">Nome *</label><input id="familiar-nome" class="form-control" required></div>
-            <div class="col-md-3"><label class="form-label">Parentesco *</label><input id="familiar-parentesco" class="form-control" required></div>
-            <div class="col-md-3"><label class="form-label">Telefone</label><input id="familiar-telefone" class="form-control"></div>
-            <div class="col-md-2"><label class="form-label">E-mail</label><input id="familiar-email" type="email" class="form-control"></div>
-            <div class="col-12"><label><input id="familiar-principal" type="checkbox"> Responsável</label></div>
-          </div><button class="btn btn-success mt-3">Salvar</button></form></div>
+          <div class="d-flex justify-content-between mb-3"><h5>Vínculos familiares</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-familiar">➕ Adicionar</button></div>
+          <div id="novo-familiar" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-familiar" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Nome *</label><input id="familiar-nome" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Parentesco *</label><input id="familiar-parentesco" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Telefone</label><input id="familiar-telefone" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">E-mail</label><input id="familiar-email" type="email" class="form-control"></div>
+                <div class="col-12"><div class="form-check"><input id="familiar-principal" class="form-check-input" type="checkbox"><label class="form-check-label" for="familiar-principal">Contato principal / responsável</label></div></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar</button>
+            </form>
+          </div>
           <div id="lista-familiares">Carregando...</div>
         </div>
 
-        <div id="alta" class="tab-pane fade"><h5>Plano de alta</h5><div id="conteudo-alta">Carregando...</div></div>
+        <div id="alta" class="tab-pane fade">
+          <div class="d-flex justify-content-between mb-3"><h5>Plano de alta</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-plano-alta">➕ Criar plano</button></div>
+          <div id="novo-plano-alta" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-plano-alta" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Previsão de alta</label><input id="alta-previsao" type="date" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Tipo de alta</label><input id="alta-tipo" class="form-control" placeholder="Familiar, transferência..."></div>
+                <div class="col-12"><label class="form-label">Orientações</label><textarea id="alta-orientacoes" class="form-control" rows="3"></textarea></div>
+                <div class="col-12"><label class="form-label">Etapas, uma por linha</label><textarea id="alta-etapas" class="form-control" rows="4" placeholder="Treinamento da família&#10;Organização dos documentos&#10;Avaliação final"></textarea></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar plano</button>
+            </form>
+          </div>
+          <div id="conteudo-alta">Carregando...</div>
+        </div>
+
+        <div id="beneficios" class="tab-pane fade">
+          <div class="d-flex justify-content-between mb-3"><h5>Benefícios e auxílios</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-beneficio">➕ Adicionar</button></div>
+          <div id="novo-beneficio" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-beneficio" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Tipo *</label><select id="beneficio-tipo" class="form-select" required><option value="Aposentadoria">Aposentadoria</option><option value="Pensão">Pensão</option><option value="BPC/LOAS">BPC/LOAS</option><option value="Auxílio municipal">Auxílio municipal</option><option value="Outro">Outro</option></select></div>
+                <div class="col-md-3"><label class="form-label">Valor mensal *</label><input id="beneficio-valor" type="number" min="0" step="0.01" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Órgão pagador</label><input id="beneficio-orgao" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Status</label><select id="beneficio-status" class="form-select"><option value="ativo">Ativo</option><option value="suspenso">Suspenso</option><option value="encerrado">Encerrado</option></select></div>
+                <div class="col-md-4"><label class="form-label">Número do benefício</label><input id="beneficio-numero" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Data inicial</label><input id="beneficio-inicio" type="date" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Data final</label><input id="beneficio-fim" type="date" class="form-control"></div>
+                <div class="col-12"><label class="form-label">Observações</label><textarea id="beneficio-observacoes" class="form-control" rows="2"></textarea></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar benefício</button>
+            </form>
+          </div>
+          <div id="lista-beneficios">Carregando...</div>
+        </div>
 
         <div id="documentos" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><h5>Documentos (<span id="total-documentos-acolhido">0</span>)</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-documento">➕ Enviar</button></div>
-          <div id="novo-documento" class="collapse mb-3"><form id="form-documento-acolhido" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-4"><label class="form-label">Título *</label><input id="documento-titulo" class="form-control" required></div>
-            <div class="col-md-3"><label class="form-label">Categoria *</label><input id="documento-categoria" class="form-control" placeholder="Médico, pessoal..." required></div>
-            <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="documento-arquivo" type="file" class="form-control" required></div>
-          </div><button class="btn btn-success mt-3">Enviar</button></form></div>
+          <div class="d-flex justify-content-between mb-3"><h5>Documentos (<span id="total-documentos-acolhido">0</span>)</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-documento">➕ Enviar</button></div>
+          <div id="novo-documento" class="collapse mb-3" data-perfis="admin,technical">
+            <form id="form-documento-acolhido" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Título *</label><input id="documento-titulo" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Categoria *</label><input id="documento-categoria" class="form-control" placeholder="Médico, pessoal..." required></div>
+                <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="documento-arquivo" type="file" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" required></div>
+              </div>
+              <button class="btn btn-success mt-3">Enviar</button>
+            </form>
+          </div>
+          <div class="alert alert-info small">Documentos antigos cujo arquivo físico não estava no ZIP aparecerão como indisponíveis. Novos uploads podem ser baixados normalmente.</div>
           <div id="lista-documentos-acolhido">Carregando...</div>
         </div>
       </div>

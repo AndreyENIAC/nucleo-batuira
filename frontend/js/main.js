@@ -3,7 +3,8 @@
    ===================================================== */
 
 document.addEventListener('DOMContentLoaded', function () {
-  const paginaLogin = window.location.pathname.endsWith('login.html');
+  const arquivo = window.location.pathname.split('/').pop();
+  const paginaLogin = arquivo === 'login.html' || arquivo === '';
 
   if (!paginaLogin && !getToken()) {
     window.location.href = 'login.html';
@@ -26,6 +27,11 @@ async function configurarSidebar() {
     return;
   }
 
+  if (usuario.primeiro_acesso && !window.location.pathname.endsWith('trocar-senha.html')) {
+    window.location.href = 'trocar-senha.html';
+    return;
+  }
+
   document.querySelectorAll('.usuario-nome').forEach(function (elemento) {
     elemento.textContent = usuario.nome;
   });
@@ -35,7 +41,7 @@ async function configurarSidebar() {
   });
 
   document.querySelectorAll('[data-perfis]').forEach(function (elemento) {
-    const perfis = elemento.dataset.perfis.split(',');
+    const perfis = elemento.dataset.perfis.split(',').map(p => p.trim());
     elemento.classList.toggle('d-none', !perfis.includes(usuario.perfil));
   });
 
@@ -54,11 +60,17 @@ function verificarAcessoDaPagina() {
 
   const arquivo = window.location.pathname.split('/').pop();
 
-  if (arquivo === 'financeiro.html' && !['admin', 'financial'].includes(usuario.perfil)) {
+  if (arquivo === 'usuarios.html' && usuario.perfil !== 'admin') {
     window.location.href = 'index.html';
+    return;
   }
 
-  if (['acolhidos.html', 'perfil.html'].includes(arquivo) && usuario.perfil === 'financial') {
+  if (arquivo === 'financeiro.html' && !['admin', 'financial', 'staff'].includes(usuario.perfil)) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  if (['acolhidos.html', 'perfil.html'].includes(arquivo) && !['admin', 'technical', 'staff'].includes(usuario.perfil)) {
     window.location.href = 'index.html';
   }
 }

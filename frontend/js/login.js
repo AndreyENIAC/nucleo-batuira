@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
+  const usuarioSalvo = getUsuarioSalvo();
+
   if (getToken()) {
-    window.location.href = 'index.html';
+    window.location.href = usuarioSalvo?.primeiro_acesso
+      ? 'trocar-senha.html'
+      : 'index.html';
     return;
   }
 
@@ -24,7 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       salvarSessao(resposta.access_token, resposta.usuario);
-      window.location.href = 'index.html';
+      window.location.href = resposta.usuario.primeiro_acesso
+        ? 'trocar-senha.html'
+        : 'index.html';
     } catch (erro) {
       mostrarAlerta('mensagem-erro', erro.message, 'danger');
     } finally {

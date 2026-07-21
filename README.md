@@ -130,16 +130,24 @@ Depois, acesse:
 http://127.0.0.1:5500/login.html
 ```
 
+No primeiro login do administrador (`admin / admin123`), o sistema exige a criação de uma nova senha antes de liberar o dashboard.
+
 ## ✅ Funcionalidades do MVP
 
 Entre as funcionalidades desenvolvidas ou previstas no escopo do projeto estão:
 
-- Autenticação de usuários.
-- Controle de acesso por tipo de usuário.
-- Dashboard com informações resumidas.
-- Cadastro e consulta de usuários.
-- Cadastro e consulta de acolhidos.
-- Cadastro e consulta de documentos.
+- Autenticação de usuários com JWT.
+- Troca obrigatória de senha no primeiro acesso.
+- Recuperação de acesso administrada pelo perfil administrador.
+- Controle de permissões por tipo de usuário.
+- Dashboard com saldo mensal, alertas, próximos eventos e acolhidos por status.
+- Cadastro, edição, inativação e reativação de usuários.
+- Cadastro, edição, alteração de status e inativação de acolhidos.
+- Alergias, prescrições, notas com alertas, PIA, PTS e plano de alta.
+- Benefícios e auxílios vinculados ao acolhido.
+- Cadastro, consulta, upload e download de documentos.
+- Agenda com eventos separados por Gestão de Saúde, Gestão Institucional e Geral.
+- Cadastro de receitas, doações e gastos com prestação de contas automática.
 - Comunicação entre o Frontend e a API Flask.
 - Armazenamento das informações no banco SQLite.
 
@@ -147,12 +155,13 @@ Entre as funcionalidades desenvolvidas ou previstas no escopo do projeto estão:
 
 O sistema foi desenvolvido como um MVP acadêmico e poderá receber melhorias futuras.
 
-- [ ] Aprimorar a troca obrigatória de senha no primeiro acesso.
-- [ ] Expandir os dashboards por nível de acesso.
-- [ ] Adicionar filtros avançados na consulta de acolhidos.
-- [ ] Expandir os prontuários e planos assistenciais, como PIA e PTS.
-- [ ] Desenvolver ou ampliar o módulo financeiro.
-- [ ] Melhorar as validações e mensagens de erro.
+- [x] Implementar troca obrigatória de senha no primeiro acesso.
+- [x] Adaptar agenda e dados do dashboard conforme o perfil de acesso.
+- [x] Adicionar filtros e status na consulta de acolhidos.
+- [x] Expandir os prontuários e planos assistenciais, como PIA e PTS.
+- [x] Desenvolver o módulo de Gestão Institucional com receitas, gastos e prestação de contas.
+- [x] Melhorar validações essenciais de CPF, status e documentos.
+- [ ] Ampliar testes automatizados e validações de produção.
 - [ ] Preparar o sistema para hospedagem em um servidor online.
 - [ ] Avaliar a migração do SQLite para outro banco em uma versão de produção.
 
@@ -200,4 +209,4 @@ Agradecemos também ao corpo docente da **Faculdade ENIAC** e à coordenação d
 
 ## 📝 Licença
 
-Este projeto está sob licença. Consulte o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+Este projeto está sob licença. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.

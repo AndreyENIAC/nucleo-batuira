@@ -22,7 +22,10 @@ body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sa
 
 .sidebar {
   width: var(--sidebar-w);
-  min-height: 100vh;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
   background: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;
@@ -32,8 +35,8 @@ body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sa
 
 .conteudo {
   flex: 1;
+  min-width: 0;
   padding: 2rem;
-  overflow-y: auto;
 }
 
 /* =====================================================
@@ -285,7 +288,7 @@ body { background-color: var(--cinza-bg); font-family: 'Segoe UI', system-ui, sa
    ===================================================== */
 @media (max-width: 768px) {
   .layout { flex-direction: column; }
-  .sidebar { width: 100%; min-height: auto; }
+  .sidebar { width: 100%; height: auto; min-height: auto; position: static; overflow: visible; }
   .conteudo { padding: 1rem; }
 }
 

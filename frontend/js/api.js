@@ -40,18 +40,31 @@ async function apiFetch(rota, opcoes = {}) {
     headers: headers
   });
 
+  const tipo = resposta.headers.get('content-type') || '';
+  const dados = tipo.includes('application/json') ? await resposta.json() : null;
+
   if (resposta.status === 401) {
     limparSessao();
-    if (!window.location.pathname.endsWith('login.html')) {
+    const arquivo = window.location.pathname.split('/').pop();
+    if (!['login.html', 'esqueci-senha.html'].includes(arquivo)) {
       window.location.href = 'login.html';
     }
   }
 
-  const tipo = resposta.headers.get('content-type') || '';
-  const dados = tipo.includes('application/json') ? await resposta.json() : null;
+  if (resposta.status === 403 && dados?.troca_senha_obrigatoria) {
+    const usuario = getUsuarioSalvo() || {};
+    usuario.primeiro_acesso = true;
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    if (!window.location.pathname.endsWith('trocar-senha.html')) {
+      window.location.href = 'trocar-senha.html';
+    }
+  }
 
   if (!resposta.ok) {
-    throw new Error(dados?.erro || 'Não foi possível concluir a operação.');
+    const erro = new Error(dados?.erro || 'Não foi possível concluir a operação.');
+    erro.status = resposta.status;
+    erro.dados = dados;
+    throw erro;
   }
 
   return dados;
@@ -75,7 +88,7 @@ function formatarData(valor) {
 
 function formatarDataHora(valor) {
   if (!valor) return '—';
-  const data = new Date(valor);
+  const data = new Date(String(valor).replace(' ', 'T'));
   if (Number.isNaN(data.getTime())) return valor;
   return data.toLocaleString('pt-BR', {
     day: '2-digit', month: '2-digit', year: 'numeric',

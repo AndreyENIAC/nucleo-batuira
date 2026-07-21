@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('form-cadastro-acolhido').addEventListener('submit', cadastrarAcolhido);
 
   document.getElementById('data-admissao').value = new Date().toISOString().split('T')[0];
+  document.getElementById('acolhido-cpf').addEventListener('input', formatarCampoCpf);
 });
 
 async function carregarAcolhidos() {
@@ -36,10 +37,10 @@ function renderizarAcolhidos(acolhidos) {
 
   corpo.innerHTML = acolhidos.map(function (a) {
     return '<tr><td class="fw-semibold">' + escaparHTML(a.nome) + '</td>' +
+      '<td>' + escaparHTML(formatarCpfTabela(a.cpf)) + '</td>' +
       '<td>' + (a.idade ?? '—') + '</td>' +
       '<td>' + escaparHTML(a.quarto || '—') + '</td>' +
       '<td>' + escaparHTML(a.condicao_principal || '—') + '</td>' +
-      '<td class="text-muted small">' + escaparHTML(a.tipo_atendimento || '—') + '</td>' +
       '<td class="text-muted small">' + formatarData(a.ultima_consulta) + '</td>' +
       '<td>' + badgeStatus(a.status) + '</td>' +
       '<td><a href="perfil.html?id=' + a.id + '" class="btn btn-primary btn-sm">Ver Perfil →</a></td></tr>';
@@ -51,7 +52,8 @@ function badgeStatus(status) {
     estavel: ['Estável', 'badge-ativo'],
     monitoramento: ['Atenção', 'badge-atencao'],
     critico: ['Crítico', 'badge-critico'],
-    alta: ['Alta', 'badge-alta']
+    alta: ['Alta', 'badge-alta'],
+    inativo: ['Inativo', 'badge-pendente']
   };
   const item = dados[status] || [status, 'badge-pendente'];
   return '<span class="badge-nb ' + item[1] + '">' + escaparHTML(item[0]) + '</span>';
@@ -64,7 +66,7 @@ async function cadastrarAcolhido(evento) {
   const dados = {
     nome: document.getElementById('acolhido-nome').value.trim(),
     data_nascimento: document.getElementById('data-nascimento').value,
-    modalidade_acolhimento: document.getElementById('modalidade').value,
+    cpf: document.getElementById('acolhido-cpf').value.trim(),
     data_admissao: document.getElementById('data-admissao').value,
     quarto: document.getElementById('quarto').value.trim(),
     status: document.getElementById('status').value,
@@ -86,4 +88,19 @@ async function cadastrarAcolhido(evento) {
   } catch (erro) {
     mostrarAlerta('mensagem-acolhidos', erro.message, 'danger');
   }
+}
+
+function formatarCampoCpf(evento) {
+  const numeros = evento.target.value.replace(/\D/g, '').slice(0, 11);
+  let valor = numeros;
+  if (numeros.length > 9) valor = numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+  else if (numeros.length > 6) valor = numeros.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+  else if (numeros.length > 3) valor = numeros.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+  evento.target.value = valor;
+}
+
+function formatarCpfTabela(valor) {
+  const numeros = String(valor || '').replace(/\D/g, '');
+  if (numeros.length !== 11) return valor || 'Não informado';
+  return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }

@@ -1,66 +1,144 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão Financeira — Núcleo Batuíra</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão Institucional — Núcleo Batuíra</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-cabecalho"><img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png" alt="Núcleo Batuíra" class="logo-sidebar" onerror="this.style.display='none'"><div class="usuario-info"><p class="usuario-nome">Carregando...</p><span class="usuario-cargo">—</span></div></div>
-    <nav class="sidebar-nav"><a href="index.html" class="link-sidebar">📊 Dashboard</a><a href="acolhidos.html" class="link-sidebar" data-perfis="admin,technical,staff">👥 Acolhidos</a><a href="financeiro.html" class="link-sidebar ativo" data-perfis="admin,financial">💼 Gestão Financeira</a></nav>
+    <div class="sidebar-cabecalho">
+      <img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png" alt="Núcleo Batuíra" class="logo-sidebar" onerror="this.style.display='none'">
+      <div class="usuario-info"><p class="usuario-nome">Carregando...</p><span class="usuario-cargo">—</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="link-sidebar">📊 Dashboard</a>
+      <a href="agenda.html" class="link-sidebar">📅 Agenda</a>
+      <a href="acolhidos.html" class="link-sidebar" data-perfis="admin,technical,staff">🩺 Gestão de Saúde</a>
+      <a href="financeiro.html" class="link-sidebar ativo" data-perfis="admin,financial,staff">🏛️ Gestão Institucional</a>
+      <a href="usuarios.html" class="link-sidebar" data-perfis="admin">🔐 Gerenciar Usuários</a>
+    </nav>
     <div class="sidebar-rodape"><a href="#" class="btn btn-danger w-100 btn-sm btn-logout">🚪 Sair</a></div>
   </aside>
 
   <main class="conteudo">
-    <h4 class="text-primary mb-1">💼 Gestão institucional</h4><p class="text-muted mb-4">Documentos, gastos e prestações de contas.</p>
+    <h4 class="text-primary mb-1">🏛️ Gestão Institucional</h4>
+    <p class="text-muted mb-4">Receitas, doações, gastos, documentos e prestação de contas da instituição.</p>
     <div id="mensagem-financeiro" class="alert d-none"></div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4"><div class="card-stat"><div class="small text-muted">Receitas do mês</div><strong id="resumo-receitas" class="fs-5 text-success">—</strong></div></div>
+      <div class="col-md-4"><div class="card-stat"><div class="small text-muted">Gastos do mês</div><strong id="resumo-gastos" class="fs-5 text-danger">—</strong></div></div>
+      <div class="col-md-4"><div class="card-stat"><div class="small text-muted">Saldo do mês</div><strong id="resumo-saldo" class="fs-5 text-primary">—</strong></div></div>
+    </div>
 
     <div class="card-nb overflow-hidden">
       <ul class="nav nav-tabs nav-tabs-nb px-3 pt-2">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#documentos">📁 Documentos</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#gastos">💰 Gastos</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#prestacao">📊 Prestação</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#recursos">🏛️ Recursos</button></li>
+        <li class="nav-item"><button id="btn-tab-documentos" class="nav-link active" data-bs-toggle="tab" data-bs-target="#documentos">📁 Documentos</button></li>
+        <li class="nav-item"><button id="btn-tab-receitas" class="nav-link" data-bs-toggle="tab" data-bs-target="#receitas">💵 Receitas e doações</button></li>
+        <li class="nav-item"><button id="btn-tab-gastos" class="nav-link" data-bs-toggle="tab" data-bs-target="#gastos">💸 Gastos</button></li>
+        <li class="nav-item"><button id="btn-tab-prestacao" class="nav-link" data-bs-toggle="tab" data-bs-target="#prestacao">📊 Prestação</button></li>
+        <li class="nav-item"><button id="btn-tab-recursos" class="nav-link" data-bs-toggle="tab" data-bs-target="#recursos">🏛️ Recursos</button></li>
       </ul>
 
       <div class="tab-content p-4">
         <div id="documentos" class="tab-pane fade show active">
-          <div class="d-flex justify-content-between mb-3"><h5>Documentos institucionais (<span id="total-documentos-institucionais">0</span>)</h5><button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-documento-institucional">➕ Enviar</button></div>
-          <div id="novo-documento-institucional" class="collapse mb-3"><form id="form-documento-institucional" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-4"><label class="form-label">Título *</label><input id="doc-inst-titulo" class="form-control" required></div>
-            <div class="col-md-3"><label class="form-label">Categoria *</label><input id="doc-inst-categoria" class="form-control" placeholder="Licença, contrato..." required></div>
-            <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="doc-inst-arquivo" type="file" class="form-control" required></div>
-          </div><button class="btn btn-success mt-3">Enviar</button></form></div>
+          <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <h5>Documentos institucionais (<span id="total-documentos-institucionais">0</span>)</h5>
+            <button data-perfis="admin,financial" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-documento-institucional">➕ Enviar</button>
+          </div>
+          <div id="novo-documento-institucional" class="collapse mb-3" data-perfis="admin,financial">
+            <form id="form-documento-institucional" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Título *</label><input id="doc-inst-titulo" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Categoria *</label><input id="doc-inst-categoria" class="form-control" placeholder="Licença, contrato..." required></div>
+                <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="doc-inst-arquivo" type="file" class="form-control" required></div>
+              </div>
+              <button class="btn btn-success mt-3">Enviar</button>
+            </form>
+          </div>
           <div id="lista-documentos-institucionais">Carregando...</div>
         </div>
 
-        <div id="gastos" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><div><h5>Gastos</h5><p class="mb-0">Total cadastrado: <strong id="total-gastos">—</strong></p></div><button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#form-gasto-collapse">➕ Registrar gasto</button></div>
-          <div id="form-gasto-collapse" class="collapse mb-3"><form id="form-gasto" class="card-nb p-3"><div class="row g-2">
-            <div class="col-md-4"><label class="form-label">Descrição *</label><input id="gasto-descricao" class="form-control" required></div>
-            <div class="col-md-2"><label class="form-label">Valor *</label><input id="gasto-valor" type="number" step="0.01" min="0" class="form-control" required></div>
-            <div class="col-md-2"><label class="form-label">Data *</label><input id="gasto-data" type="date" class="form-control" required></div>
-            <div class="col-md-4"><label class="form-label">Categoria *</label><select id="gasto-categoria" class="form-select" required></select></div>
-            <div class="col-md-6"><label class="form-label">Acolhido</label><select id="gasto-acolhido" class="form-select"></select></div>
-            <div class="col-md-6"><label class="form-label">Fornecedor</label><input id="gasto-fornecedor" class="form-control"></div>
-          </div><button class="btn btn-success mt-3">Salvar</button></form></div>
-          <div class="card-nb tabela-scroll"><table class="tabela-nb"><thead><tr><th>Descrição</th><th>Acolhido</th><th>Categoria</th><th>Fornecedor</th><th>Data</th><th class="text-end">Valor</th></tr></thead><tbody id="corpo-gastos"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody></table></div>
+        <div id="receitas" class="tab-pane fade">
+          <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <div><h5>Receitas, arrecadações e doações</h5><p class="mb-0">Total cadastrado: <strong id="total-receitas">—</strong></p></div>
+            <button data-perfis="admin,financial" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#form-receita-collapse">➕ Registrar receita</button>
+          </div>
+          <div id="form-receita-collapse" class="collapse mb-3" data-perfis="admin,financial">
+            <form id="form-receita" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Descrição *</label><input id="receita-descricao" class="form-control" required></div>
+                <div class="col-md-2"><label class="form-label">Valor *</label><input id="receita-valor" type="number" step="0.01" min="0" class="form-control" required></div>
+                <div class="col-md-2"><label class="form-label">Data *</label><input id="receita-data" type="date" class="form-control" required></div>
+                <div class="col-md-4"><label class="form-label">Categoria *</label><select id="receita-categoria" class="form-select" required></select></div>
+                <div class="col-md-6"><label class="form-label">Origem / fonte</label><input id="receita-fonte" class="form-control" placeholder="Prefeitura, doador, evento..."></div>
+                <div class="col-md-6"><label class="form-label">Observações</label><input id="receita-observacoes" class="form-control"></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar</button>
+            </form>
+          </div>
+          <div class="card-nb tabela-scroll">
+            <table class="tabela-nb">
+              <thead><tr><th>Descrição</th><th>Categoria</th><th>Origem</th><th>Data</th><th class="text-end">Valor</th></tr></thead>
+              <tbody id="corpo-receitas"><tr><td colspan="5" class="estado-carregando">Carregando...</td></tr></tbody>
+            </table>
+          </div>
         </div>
 
-        <div id="prestacao" class="tab-pane fade"><h5 class="mb-3">Prestação de contas</h5><div id="lista-prestacoes">Carregando...</div></div>
+        <div id="gastos" class="tab-pane fade">
+          <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <div><h5>Gastos</h5><p class="mb-0">Total cadastrado: <strong id="total-gastos">—</strong></p></div>
+            <button data-perfis="admin,financial" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#form-gasto-collapse">➕ Registrar gasto</button>
+          </div>
+          <div id="form-gasto-collapse" class="collapse mb-3" data-perfis="admin,financial">
+            <form id="form-gasto" class="card-nb p-3">
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label">Descrição *</label><input id="gasto-descricao" class="form-control" required></div>
+                <div class="col-md-2"><label class="form-label">Valor *</label><input id="gasto-valor" type="number" step="0.01" min="0" class="form-control" required></div>
+                <div class="col-md-2"><label class="form-label">Data *</label><input id="gasto-data" type="date" class="form-control" required></div>
+                <div class="col-md-4"><label class="form-label">Categoria *</label><select id="gasto-categoria" class="form-select" required></select></div>
+                <div class="col-md-6"><label class="form-label">Acolhido</label><select id="gasto-acolhido" class="form-select"></select></div>
+                <div class="col-md-6"><label class="form-label">Fornecedor</label><input id="gasto-fornecedor" class="form-control"></div>
+              </div>
+              <button class="btn btn-success mt-3">Salvar</button>
+            </form>
+          </div>
+          <div class="card-nb tabela-scroll">
+            <table class="tabela-nb">
+              <thead><tr><th>Descrição</th><th>Acolhido</th><th>Categoria</th><th>Fornecedor</th><th>Data</th><th class="text-end">Valor</th></tr></thead>
+              <tbody id="corpo-gastos"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="prestacao" class="tab-pane fade">
+          <h5 class="mb-1">Prestação de contas</h5>
+          <p class="text-muted">Os totais são calculados automaticamente a partir das receitas e dos gastos de cada mês.</p>
+          <div id="lista-prestacoes">Carregando...</div>
+        </div>
 
         <div id="recursos" class="tab-pane fade">
-          <h5 class="mb-3">Recursos administrativos</h5><div id="lista-recursos" class="card-nb p-3 mb-4">Carregando...</div>
-          <h5 class="mb-3">Benefícios dos acolhidos</h5><div class="card-nb tabela-scroll"><table class="tabela-nb"><thead><tr><th>Acolhido</th><th>Benefício</th><th>Valor mensal</th><th>Status</th></tr></thead><tbody id="corpo-beneficios"></tbody></table></div>
+          <h5 class="mb-3">Recursos administrativos</h5>
+          <div id="lista-recursos" class="card-nb p-3 mb-4">Carregando...</div>
+          <h5 class="mb-3">Benefícios dos acolhidos</h5>
+          <div class="card-nb tabela-scroll">
+            <table class="tabela-nb">
+              <thead><tr><th>Acolhido</th><th>Benefício</th><th>Valor mensal</th><th>Status</th></tr></thead>
+              <tbody id="corpo-beneficios"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/api.js"></script><script src="js/main.js"></script><script src="js/financeiro.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/financeiro.js"></script>
 </body>
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar usuários — Núcleo Batuíra</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-cabecalho">
+      <img src="https://nucleobatuira.org.br/wp-content/uploads/2021/07/LOGO-HDV-BATUIRA-1-768x324.png"
+           alt="Núcleo Batuíra" class="logo-sidebar" onerror="this.style.display='none'">
+      <div class="usuario-info"><p class="usuario-nome">Carregando...</p><span class="usuario-cargo">—</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="link-sidebar">📊 Dashboard</a>
+      <a href="agenda.html" class="link-sidebar">📅 Agenda</a>
+      <a href="acolhidos.html" class="link-sidebar" data-perfis="admin,technical,staff">🩺 Gestão de Saúde</a>
+      <a href="financeiro.html" class="link-sidebar" data-perfis="admin,financial,staff">🏛️ Gestão Institucional</a>
+      <a href="usuarios.html" class="link-sidebar ativo" data-perfis="admin">🔐 Gerenciar Usuários</a>
+    </nav>
+    <div class="sidebar-rodape"><a href="#" class="btn btn-danger w-100 btn-sm btn-logout">🚪 Sair</a></div>
+  </aside>
+
+  <main class="conteudo">
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+      <div>
+        <h4 class="text-primary mb-1">🔐 Gerenciar usuários</h4>
+        <p class="text-muted mb-0">Criação, edição, inativação e recuperação de acesso.</p>
+      </div>
+      <button id="btn-novo-usuario" class="btn btn-primary" type="button">➕ Novo usuário</button>
+    </div>
+
+    <div id="mensagem-usuarios" class="alert d-none"></div>
+
+    <div id="senha-temporaria-box" class="alert alert-warning d-none">
+      <strong>Senha temporária:</strong>
+      <code id="senha-temporaria-valor" class="fs-6 ms-2"></code>
+      <p class="small mb-0 mt-2">Anote e entregue ao usuário. Ela não será mostrada novamente.</p>
+    </div>
+
+    <section id="painel-form-usuario" class="card-nb p-4 mb-4 d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 id="titulo-form-usuario" class="mb-0">Cadastrar usuário</h5>
+        <button id="btn-cancelar-usuario" type="button" class="btn btn-outline-secondary btn-sm">Cancelar</button>
+      </div>
+      <form id="form-usuario">
+        <input type="hidden" id="usuario-id">
+        <div class="row g-3">
+          <div class="col-md-6"><label for="usuario-nome-form" class="form-label">Nome *</label><input id="usuario-nome-form" class="form-control" required></div>
+          <div class="col-md-3"><label for="usuario-login-form" class="form-label">Usuário *</label><input id="usuario-login-form" class="form-control" required></div>
+          <div class="col-md-3"><label for="usuario-perfil-form" class="form-label">Perfil *</label><select id="usuario-perfil-form" class="form-select" required></select></div>
+          <div class="col-md-6"><label for="usuario-email-form" class="form-label">E-mail</label><input id="usuario-email-form" type="email" class="form-control"></div>
+          <div class="col-md-3"><label for="usuario-telefone-form" class="form-label">Telefone</label><input id="usuario-telefone-form" class="form-control"></div>
+          <div class="col-md-3"><label for="usuario-profissao-form" class="form-label">Profissão</label><input id="usuario-profissao-form" class="form-control"></div>
+          <div class="col-md-3"><label for="usuario-conselho-form" class="form-label">Conselho</label><input id="usuario-conselho-form" class="form-control" placeholder="CRM, COREN..."></div>
+          <div class="col-md-3"><label for="usuario-registro-form" class="form-label">Registro profissional</label><input id="usuario-registro-form" class="form-control"></div>
+          <div id="campo-senha-temporaria" class="col-md-6">
+            <label for="usuario-senha-form" class="form-label">Senha temporária opcional</label>
+            <input id="usuario-senha-form" type="text" class="form-control" minlength="8" placeholder="Em branco: sistema gera automaticamente">
+          </div>
+        </div>
+        <button type="submit" id="btn-salvar-usuario" class="btn btn-success mt-3">Salvar usuário</button>
+      </form>
+    </section>
+
+    <section class="card-nb p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Solicitações de recuperação</h5>
+        <span id="total-recuperacoes" class="badge bg-danger">0</span>
+      </div>
+      <div id="lista-recuperacoes"><p class="text-muted mb-0">Carregando...</p></div>
+    </section>
+
+    <section class="card-nb p-4 tabela-scroll">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Usuários cadastrados</h5>
+        <span id="total-usuarios-cadastrados" class="text-muted small">—</span>
+      </div>
+      <table class="tabela-nb">
+        <thead><tr><th>Nome</th><th>Usuário</th><th>Perfil</th><th>Situação</th><th>Primeiro acesso</th><th>Ações</th></tr></thead>
+        <tbody id="corpo-usuarios"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/usuarios.js"></script>
+</body>
+</html>
