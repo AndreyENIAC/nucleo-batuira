@@ -8,6 +8,8 @@ if not defined STAMP set "STAMP=sem_data"
 set "LOG=%CD%\logs\backend_%STAMP%.log"
 set "ULTIMO_LOG=%CD%\logs\ultimo_backend.log"
 set "VPY=%CD%\venv\Scripts\python.exe"
+set "RUNNER=%CD%\executar_com_log.py"
+set "ANALISADOR=%CD%\analisar_erro.py"
 
 if not exist "%VPY%" (
     echo.
@@ -24,6 +26,13 @@ if not exist "app.py" (
     exit /b 1
 )
 
+if not exist "%RUNNER%" (
+    echo ERRO: executar_com_log.py nao foi encontrado.
+    echo Copie novamente os arquivos da correcao V3.
+    pause
+    exit /b 1
+)
+
 >"%LOG%" echo BACKEND NUCLEO BATUIRA - %date% %time%
 echo ============================================================
 echo BACKEND FLASK - NUCLEO BATUIRA
@@ -33,28 +42,25 @@ echo Log: %LOG%
 echo Para encerrar, pressione CTRL+C.
 echo.
 
-set "PYTHONUNBUFFERED=1"
-where powershell >nul 2>&1
-if errorlevel 1 (
-    "%VPY%" "app.py"
-    set "CODIGO=!errorlevel!"
-) else (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%VPY%' 'app.py' 2^>^&1 | Tee-Object -FilePath '%LOG%' -Append; exit $LASTEXITCODE"
-    set "CODIGO=!errorlevel!"
-)
+"%VPY%" "%RUNNER%" --log "%LOG%" --cwd "%CD%" -- "%VPY%" -u app.py
+set "CODIGO=!errorlevel!"
 copy /y "%LOG%" "%ULTIMO_LOG%" >nul 2>&1
 
-if not "%CODIGO%"=="0" (
+if not "!CODIGO!"=="0" (
     echo.
     echo ============================================================
-    echo O BACKEND FOI ENCERRADO COM ERRO %CODIGO%
+    echo O BACKEND FOI ENCERRADO COM ERRO !CODIGO!
     echo ============================================================
-    echo Consulte o arquivo:
+    echo Log completo:
     echo %LOG%
+    echo.
+    if exist "%ANALISADOR%" (
+        "%VPY%" "%ANALISADOR%" "%LOG%"
+    )
     start "" notepad "%LOG%"
 ) else (
     echo.
-    echo O Backend foi encerrado.
+    echo O Backend foi encerrado normalmente.
 )
 pause
-exit /b %CODIGO%
+exit /b !CODIGO!
