@@ -24,24 +24,21 @@ async function carregarFinanceiro() {
       apiFetch('/api/receitas'),
       apiFetch('/api/gastos'),
       apiFetch('/api/prestacoes-contas'),
-      apiFetch('/api/recursos-administrativos'),
       apiFetch('/api/acolhidos'),
-      apiFetch('/api/beneficios'),
       apiFetch('/api/dashboard')
     ]);
 
     const categorias = resultados[1];
     categoriasDespesa = ordenarOutrosPorUltimo(categorias.filter(c => c.tipo === 'despesa'));
     categoriasReceita = ordenarOutrosPorUltimo(categorias.filter(c => c.tipo === 'receita'));
-    acolhidosFinanceiro = resultados[6];
+    acolhidosFinanceiro = resultados[5];
 
     preencherSelects();
     renderizarDocumentosInstitucionais(resultados[0]);
     renderizarReceitas(resultados[2]);
     renderizarGastos(resultados[3]);
     renderizarPrestacoes(resultados[4]);
-    renderizarRecursos(resultados[5], resultados[7]);
-    renderizarResumo(resultados[8]);
+    renderizarResumo(resultados[6]);
   } catch (erro) {
     mostrarAlerta('mensagem-financeiro', erro.message, 'danger');
   }
@@ -171,21 +168,6 @@ function formatarCompetencia(valor) {
   return partes.length === 2 ? partes[1] + '/' + partes[0] : valor;
 }
 
-function renderizarRecursos(recursos, beneficios) {
-  const container = document.getElementById('lista-recursos');
-  container.innerHTML = recursos.length ? recursos.map(function (r) {
-    return '<div class="documento-item"><div><strong>' + escaparHTML(r.nome) + '</strong>' +
-      '<div class="small text-muted">' + escaparHTML(r.tipo) + ' · Validade: ' + formatarData(r.data_validade) + '</div></div>' +
-      '<span class="badge-nb ' + (r.status === 'ativo' ? 'badge-ativo' : 'badge-atencao') + '">' + escaparHTML(r.status) + '</span></div>';
-  }).join('') : '<p class="text-muted">Nenhum recurso administrativo cadastrado.</p>';
-
-  const corpo = document.getElementById('corpo-beneficios');
-  corpo.innerHTML = beneficios.length ? beneficios.map(function (b) {
-    return '<tr><td>' + escaparHTML(b.acolhido) + '</td><td>' + escaparHTML(b.tipo_beneficio) + '</td>' +
-      '<td>' + formatarDinheiro(b.valor_mensal) + '</td><td>' + escaparHTML(b.status) + '</td></tr>';
-  }).join('') : mensagemVazia('Nenhum benefício cadastrado.', 4);
-}
-
 async function cadastrarReceita(evento) {
   evento.preventDefault();
   const dados = {
@@ -291,8 +273,7 @@ function ativarAbaPelaUrl() {
     '#tab-documentos': 'btn-tab-documentos',
     '#tab-receitas': 'btn-tab-receitas',
     '#tab-gastos': 'btn-tab-gastos',
-    '#tab-prestacao': 'btn-tab-prestacao',
-    '#tab-recursos': 'btn-tab-recursos'
+    '#tab-prestacao': 'btn-tab-prestacao'
   };
   const botao = document.getElementById(mapa[window.location.hash]);
   if (botao) bootstrap.Tab.getOrCreateInstance(botao).show();

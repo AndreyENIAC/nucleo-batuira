@@ -61,7 +61,6 @@ As operações de alteração são permitidas ao administrador e à equipe técn
 - `GET/POST /api/receitas`
 - `GET/POST /api/gastos`
 - `GET /api/prestacoes-contas`
-- `GET /api/recursos-administrativos`
 
 ## Agenda
 - `GET /api/agenda`

@@ -23,5 +23,5 @@ A página `perfil.html` permite consultar e, conforme o perfil, alterar dados do
 ## Agenda e Gestão Institucional
 
 - `agenda.html`: consulta e gerenciamento de eventos conforme o perfil.
-- `financeiro.html`: documentos, receitas e doações, gastos, prestação de contas e recursos.
+- `financeiro.html`: documentos, receitas e doações, gastos e prestação de contas.
 - `index.html`: dashboard com saldo, alertas, próximos eventos e acolhidos por status.

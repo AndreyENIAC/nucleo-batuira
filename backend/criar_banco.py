@@ -367,14 +367,6 @@ def criar_banco():
             """,
             (financeiro_id, hoje.strftime("%Y-%m"), "Prestação de contas do mês atual."),
         )
-        conn.execute(
-            """
-            INSERT INTO recursos_administrativos (
-                criado_por, nome, tipo, data_validade, status
-            ) VALUES (?, ?, ?, ?, ?)
-            """,
-            (financeiro_id, "Alvará de Funcionamento", "Licença Municipal", f"{hoje.year}-12-31", "ativo"),
-        )
 
         # Agenda e alerta próximos da data de criação do banco.
         amanha = datetime.now() + timedelta(days=1)

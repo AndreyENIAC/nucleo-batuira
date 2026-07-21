@@ -2190,21 +2190,6 @@ def listar_prestacoes():
     return jsonify(resultado)
 
 
-@app.get("/api/recursos-administrativos")
-@jwt_required()
-def listar_recursos_administrativos():
-    with get_connection() as conn:
-        linhas = conn.execute(
-            """
-            SELECT r.*, u.nome AS criado_por_nome
-            FROM recursos_administrativos r
-            JOIN usuarios u ON u.id = r.criado_por
-            ORDER BY r.nome
-            """
-        ).fetchall()
-
-    return jsonify([dict(linha) for linha in linhas])
-
 
 # ============================================================
 # BENEFÍCIOS — CONSULTA DO MÓDULO FINANCEIRO
