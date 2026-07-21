@@ -210,3 +210,8 @@ Agradecemos também ao corpo docente da **Faculdade ENIAC** e à coordenação d
 ## 📝 Licença
 
 Este projeto está sob licença. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+
+## Diagnóstico no Windows
+
+Os arquivos `.bat` agora interrompem a execução quando encontram um erro e salvam os detalhes em `backend/logs/`. Em caso de problema, execute `diagnosticar_windows.bat` e consulte `CORRECAO_INICIALIZACAO_WINDOWS.md`.
