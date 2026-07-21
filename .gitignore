@@ -1,0 +1,16 @@
+# Ambiente virtual e arquivos gerados pelo Python
+backend/venv/
+**/__pycache__/
+*.pyc
+
+# Configurações locais
+backend/.env
+
+# Arquivos enviados e logs gerados durante a execução
+backend/uploads/*
+backend/logs/*
+
+# Arquivos temporários do SQLite
+*.db-journal
+*.db-shm
+*.db-wal

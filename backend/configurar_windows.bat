@@ -105,11 +105,7 @@ echo.
 echo [6/8] Preparando o banco de dados...
 if exist "batuira.db" (
     echo Banco existente encontrado. Aplicando atualizacoes sem apagar os dados...
-    call :executar_python "migrar_etapa1_autenticacao.py" "Migracao da Etapa 1"
-    if errorlevel 1 goto :FALHA
-    call :executar_python "migrar_etapa2_saude.py" "Migracao da Etapa 2"
-    if errorlevel 1 goto :FALHA
-    call :executar_python "migrar_etapa3_institucional.py" "Migracao da Etapa 3"
+    call :executar_python "atualizar_banco.py" "Atualizacao do banco"
     if errorlevel 1 goto :FALHA
 ) else (
     echo Nenhum banco existente foi encontrado. Criando o banco de demonstracao...
@@ -132,7 +128,7 @@ if errorlevel 1 (
 
 echo.
 echo [8/8] Verificando os arquivos Python e a aplicacao Flask...
-"%VPY%" -m py_compile "app.py" "database.py" "criar_banco.py" "migrar_etapa1_autenticacao.py" "migrar_etapa2_saude.py" "migrar_etapa3_institucional.py" >>"%LOG%" 2>&1
+"%VPY%" -m py_compile "app.py" "database.py" "criar_banco.py" "atualizar_banco.py" "resetar_admin.py" >>"%LOG%" 2>&1
 if errorlevel 1 (
     set "ERRO_MSG=Foi encontrado um erro de sintaxe em um arquivo Python."
     goto :FALHA

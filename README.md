@@ -40,20 +40,24 @@ O sistema foi desenvolvido como um **MVP acadêmico**, com o objetivo de demonst
 nucleo-batuira/
 ├── backend/
 │   ├── app.py
+│   ├── database.py
 │   ├── batuira.db
 │   ├── requirements.txt
+│   ├── configurar_windows.bat
 │   └── ...
 │
 ├── frontend/
 │   ├── css/
-│   ├── imgs/
 │   ├── js/
-│   │   └── api.js
 │   ├── login.html
+│   ├── index.html
 │   └── ...
 │
+├── imgs/
 ├── iniciar_projeto.bat
-├── LICENSE.md
+├── diagnosticar_windows.bat
+├── GUIA_SIMPLES_DOS_ARQUIVOS.md
+├── LICENSE
 └── README.md
 ```
 
@@ -105,7 +109,7 @@ Abra um terminal na pasta do projeto e use os comandos:
 cd backend
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 python app.py
 ```
 
@@ -214,4 +218,4 @@ Este projeto está sob licença. Consulte o arquivo [LICENSE](LICENSE) para mais
 
 ## Diagnóstico no Windows
 
-Os arquivos `.bat` agora interrompem a execução quando encontram um erro e salvam os detalhes em `backend/logs/`. Em caso de problema, execute `diagnosticar_windows.bat` e consulte `CORRECAO_INICIALIZACAO_WINDOWS.md`.
+Os arquivos `.bat` interrompem a execução quando encontram um erro e salvam os detalhes em `backend/logs/`. Em caso de problema, execute `diagnosticar_windows.bat`.
