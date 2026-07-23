@@ -740,10 +740,9 @@ def dashboard():
             FROM eventos_agenda e
             LEFT JOIN acolhidos a ON a.id = e.acolhido_id
             WHERE e.status = 'agendado'
-              AND datetime(e.inicio) >= datetime('now', 'localtime')
+              AND date(e.inicio) >= date('now', 'localtime')
               AND e.setor IN ({marcadores_setores})
-            ORDER BY datetime(e.inicio)
-            LIMIT 5
+            ORDER BY datetime(e.inicio), e.id
             """,
             setores,
         ).fetchall()
@@ -755,11 +754,18 @@ def dashboard():
             FROM alertas al
             LEFT JOIN acolhidos a ON a.id = al.acolhido_id
             WHERE al.status IN ('aberto', 'em_tratamento')
+              AND (al.acolhido_id IS NULL OR a.status != 'inativo')
             ORDER BY datetime(al.criado_em) DESC, al.id DESC
             """
         ).fetchall()
         total_alertas = conn.execute(
-            "SELECT COUNT(*) FROM alertas WHERE status IN ('aberto', 'em_tratamento')"
+            """
+            SELECT COUNT(*)
+            FROM alertas al
+            LEFT JOIN acolhidos a ON a.id = al.acolhido_id
+            WHERE al.status IN ('aberto', 'em_tratamento')
+              AND (al.acolhido_id IS NULL OR a.status != 'inativo')
+            """
         ).fetchone()[0]
 
     return jsonify(
@@ -1165,6 +1171,22 @@ def cadastrar_familiar(acolhido_id):
     return jsonify({"mensagem": "Familiar cadastrado.", "id": cursor.lastrowid}), 201
 
 
+@app.delete("/api/familiares/<int:familiar_id>")
+@jwt_required()
+@permitir_perfis("admin", "technical")
+def remover_familiar(familiar_id):
+    """Oculta o vínculo familiar sem apagar o histórico do banco."""
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "UPDATE familiares SET ativo = 0, contato_principal = 0 WHERE id = ? AND ativo = 1",
+            (familiar_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Familiar não encontrado ou já removido.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Familiar removido do perfil."})
+
+
 # ============================================================
 # GESTÃO DE SAÚDE: ALERGIAS, PRESCRIÇÕES, NOTAS, PIA, PTS E ALTA
 # ============================================================
@@ -1240,6 +1262,21 @@ def cadastrar_alergia_acolhido(acolhido_id):
     return jsonify({"mensagem": "Alergia adicionada ao perfil."}), 201
 
 
+@app.delete("/api/acolhidos/<int:acolhido_id>/alergias/<int:alergia_id>")
+@jwt_required()
+@permitir_perfis("admin", "technical")
+def remover_alergia_acolhido(acolhido_id, alergia_id):
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "DELETE FROM acolhido_alergias WHERE acolhido_id = ? AND alergia_id = ?",
+            (acolhido_id, alergia_id),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Alergia não encontrada no perfil.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Alergia removida do perfil."})
+
+
 @app.get("/api/acolhidos/<int:acolhido_id>/prescricoes")
 @jwt_required()
 def listar_prescricoes(acolhido_id):
@@ -1250,7 +1287,7 @@ def listar_prescricoes(acolhido_id):
                    u.registro_profissional
             FROM prescricoes p
             JOIN usuarios u ON u.id = p.prescrito_por
-            WHERE p.acolhido_id = ?
+            WHERE p.acolhido_id = ? AND p.removida = 0
             ORDER BY CASE p.status WHEN 'ativa' THEN 0 ELSE 1 END,
                      date(p.data_inicio) DESC, p.id DESC
             """,
@@ -1331,6 +1368,28 @@ def alterar_status_prescricao(prescricao_id):
         conn.commit()
 
     return jsonify({"mensagem": "Status da prescrição atualizado."})
+
+
+@app.delete("/api/prescricoes/<int:prescricao_id>")
+@jwt_required()
+@permitir_perfis("admin", "technical")
+def remover_prescricao(prescricao_id):
+    """Remove a prescrição da tela, preservando o registro como removido."""
+    with get_connection() as conn:
+        cursor = conn.execute(
+            """
+            UPDATE prescricoes
+            SET removida = 1, status = 'encerrada',
+                data_fim = COALESCE(data_fim, date('now')),
+                atualizado_em = CURRENT_TIMESTAMP
+            WHERE id = ? AND removida = 0
+            """,
+            (prescricao_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Prescrição não encontrada ou já removida.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Prescrição removida da visualização."})
 
 
 @app.get("/api/acolhidos/<int:acolhido_id>/notas")
@@ -1758,6 +1817,25 @@ def concluir_plano_alta(plano_id):
     return jsonify({"mensagem": "Plano concluído e acolhido marcado como alta."})
 
 
+@app.patch("/api/planos-alta/<int:plano_id>/cancelar")
+@jwt_required()
+@permitir_perfis("admin", "technical")
+def cancelar_plano_alta(plano_id):
+    with get_connection() as conn:
+        cursor = conn.execute(
+            """
+            UPDATE planos_alta
+            SET status = 'cancelado', atualizado_em = CURRENT_TIMESTAMP
+            WHERE id = ? AND status NOT IN ('concluido', 'cancelado')
+            """,
+            (plano_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Plano não encontrado, concluído ou já cancelado.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Plano de alta cancelado."})
+
+
 # ------------------------------------------------------------
 # BENEFÍCIOS E AUXÍLIOS
 # ------------------------------------------------------------
@@ -1769,7 +1847,7 @@ def listar_beneficios_acolhido(acolhido_id):
         linhas = conn.execute(
             """
             SELECT * FROM beneficios
-            WHERE acolhido_id = ?
+            WHERE acolhido_id = ? AND status != 'removido'
             ORDER BY CASE status WHEN 'ativo' THEN 0 ELSE 1 END, id DESC
             """,
             (acolhido_id,),
@@ -1839,6 +1917,21 @@ def alterar_status_beneficio(beneficio_id):
     return jsonify({"mensagem": "Status do benefício atualizado."})
 
 
+@app.delete("/api/beneficios/<int:beneficio_id>")
+@jwt_required()
+@permitir_perfis("admin", "technical")
+def remover_beneficio(beneficio_id):
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "UPDATE beneficios SET status = 'removido', data_fim = COALESCE(data_fim, date('now')) WHERE id = ? AND status != 'removido'",
+            (beneficio_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Benefício não encontrado ou já removido.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Benefício removido da visualização."})
+
+
 # ============================================================
 # DOCUMENTOS
 # ============================================================
@@ -1854,7 +1947,7 @@ def listar_documentos():
         FROM documentos d
         LEFT JOIN acolhidos a ON a.id = d.acolhido_id
         JOIN usuarios u ON u.id = d.enviado_por
-        WHERE 1 = 1
+        WHERE d.status != 'removido'
     """
     parametros = []
 
@@ -1948,7 +2041,7 @@ def baixar_documento(documento_id):
         documento = conn.execute(
             """
             SELECT nome_original, caminho_arquivo, mime_type
-            FROM documentos WHERE id = ?
+            FROM documentos WHERE id = ? AND status != 'removido'
             """,
             (documento_id,),
         ).fetchone()
@@ -1972,6 +2065,35 @@ def baixar_documento(documento_id):
         mimetype=documento["mime_type"] or None,
         conditional=True,
     )
+
+
+@app.delete("/api/documentos/<int:documento_id>")
+@jwt_required()
+def remover_documento(documento_id):
+    usuario = buscar_usuario_atual()
+    with get_connection() as conn:
+        documento = conn.execute(
+            "SELECT escopo, caminho_arquivo, status FROM documentos WHERE id = ?",
+            (documento_id,),
+        ).fetchone()
+        if documento is None or documento["status"] == "removido":
+            return resposta_erro("Documento não encontrado ou já removido.", 404)
+
+        permitidos = {"admin", "technical"} if documento["escopo"] == "acolhido" else {"admin", "financial"}
+        if usuario is None or usuario["perfil"] not in permitidos:
+            return resposta_erro("Você não tem permissão para remover este documento.", 403)
+
+        conn.execute("UPDATE documentos SET status = 'removido' WHERE id = ?", (documento_id,))
+        conn.commit()
+
+    caminho = PASTA_UPLOADS / documento["caminho_arquivo"]
+    if caminho.is_file():
+        try:
+            caminho.unlink()
+        except OSError:
+            pass
+
+    return jsonify({"mensagem": "Documento removido."})
 
 
 # ============================================================
@@ -2004,6 +2126,7 @@ def listar_receitas():
             FROM receitas r
             LEFT JOIN categorias_financeiras c ON c.id = r.categoria_id
             JOIN usuarios u ON u.id = r.registrado_por
+            WHERE r.status != 'cancelada'
             ORDER BY date(r.data_recebimento) DESC, r.id DESC
             """
         ).fetchall()
@@ -2060,6 +2183,22 @@ def cadastrar_receita():
     return jsonify({"mensagem": "Receita cadastrada.", "id": cursor.lastrowid}), 201
 
 
+@app.delete("/api/receitas/<int:receita_id>")
+@jwt_required()
+@permitir_perfis("admin", "financial")
+def remover_receita(receita_id):
+    """Cancela a receita para corrigir lançamentos sem apagar o histórico."""
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "UPDATE receitas SET status = 'cancelada' WHERE id = ? AND status != 'cancelada'",
+            (receita_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Receita não encontrada ou já removida.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Receita removida dos totais e da lista."})
+
+
 @app.get("/api/gastos")
 @jwt_required()
 def listar_gastos():
@@ -2073,6 +2212,7 @@ def listar_gastos():
             JOIN categorias_financeiras c ON c.id = g.categoria_id
             LEFT JOIN acolhidos a ON a.id = g.acolhido_id
             JOIN usuarios u ON u.id = g.registrado_por
+            WHERE g.status != 'cancelado'
             ORDER BY date(g.data_gasto) DESC, g.id DESC
             """
         ).fetchall()
@@ -2131,6 +2271,22 @@ def cadastrar_gasto():
     return jsonify({"mensagem": "Gasto cadastrado.", "id": cursor.lastrowid}), 201
 
 
+@app.delete("/api/gastos/<int:gasto_id>")
+@jwt_required()
+@permitir_perfis("admin", "financial")
+def remover_gasto(gasto_id):
+    """Cancela o gasto para corrigir lançamentos sem apagar o histórico."""
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "UPDATE gastos SET status = 'cancelado' WHERE id = ? AND status != 'cancelado'",
+            (gasto_id,),
+        )
+        if cursor.rowcount == 0:
+            return resposta_erro("Gasto não encontrado ou já removido.", 404)
+        conn.commit()
+    return jsonify({"mensagem": "Gasto removido dos totais e da lista."})
+
+
 @app.get("/api/prestacoes-contas")
 @jwt_required()
 def listar_prestacoes():
@@ -2140,8 +2296,10 @@ def listar_prestacoes():
             SELECT competencia FROM prestacoes_contas
             UNION
             SELECT strftime('%Y-%m', data_gasto) FROM gastos
+            WHERE status != 'cancelado'
             UNION
             SELECT strftime('%Y-%m', data_recebimento) FROM receitas
+            WHERE status != 'cancelada'
             UNION
             SELECT strftime('%Y-%m', 'now', 'localtime')
             ORDER BY competencia DESC
@@ -2203,6 +2361,7 @@ def listar_beneficios():
             SELECT b.*, a.nome AS acolhido
             FROM beneficios b
             JOIN acolhidos a ON a.id = b.acolhido_id
+            WHERE b.status != 'removido'
             ORDER BY a.nome, b.tipo_beneficio
             """
         ).fetchall()

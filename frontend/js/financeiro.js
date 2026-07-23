@@ -2,6 +2,10 @@ let categoriasDespesa = [];
 let categoriasReceita = [];
 let acolhidosFinanceiro = [];
 
+function podeEditarInstitucional() {
+  return ['admin', 'financial'].includes(getUsuarioSalvo()?.perfil);
+}
+
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('form-gasto')?.addEventListener('submit', cadastrarGasto);
@@ -83,17 +87,26 @@ function renderizarDocumentosInstitucionais(lista) {
     return;
   }
   container.innerHTML = lista.map(function (d) {
-    const indisponivel = d.arquivo_disponivel === false;
+    const indisponivel = d.arquivo_disponivel === false || d.status === 'indisponivel';
+    const baixar = indisponivel
+      ? '<span class="badge bg-secondary">Arquivo indisponível</span>'
+      : '<button class="btn btn-outline-primary btn-sm btn-download-doc" data-id="' + d.id + '">⬇ Baixar</button>';
+    const remover = podeEditarInstitucional()
+      ? '<button class="btn btn-outline-danger btn-sm btn-remover-doc-inst" data-id="' + d.id + '">Remover</button>'
+      : '';
     return '<div class="documento-item linha-documento"><div><strong class="col-doc-nome">' + escaparHTML(d.titulo) + '</strong>' +
       '<div class="small text-muted">' + escaparHTML(d.categoria) + ' · ' + formatarDataHora(d.enviado_em) + '</div></div>' +
-      (indisponivel
-        ? '<span class="badge bg-secondary">Arquivo indisponível</span>'
-        : '<button class="btn btn-outline-primary btn-sm btn-download-doc" data-id="' + d.id + '">⬇ Baixar</button>') + '</div>';
+      '<div class="d-flex gap-2 align-items-center flex-wrap">' + baixar + remover + '</div></div>';
   }).join('');
 
   container.querySelectorAll('.btn-download-doc').forEach(function (botao) {
     botao.addEventListener('click', function () {
       baixarDocumentoFinanceiro(Number(botao.dataset.id));
+    });
+  });
+  container.querySelectorAll('.btn-remover-doc-inst').forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      removerDocumentoInstitucional(Number(botao.dataset.id));
     });
   });
 }
@@ -104,17 +117,27 @@ function renderizarReceitas(lista) {
   document.getElementById('total-receitas').textContent = formatarDinheiro(total);
 
   if (!lista.length) {
-    corpo.innerHTML = mensagemVazia('Nenhuma receita cadastrada.', 5);
+    corpo.innerHTML = mensagemVazia('Nenhuma receita cadastrada.', 6);
     return;
   }
 
   corpo.innerHTML = lista.map(function (r) {
+    const acao = podeEditarInstitucional()
+      ? '<button class="btn btn-outline-danger btn-sm btn-remover-receita" data-id="' + r.id + '">Remover</button>'
+      : '<span class="text-muted small">Somente consulta</span>';
     return '<tr><td>' + escaparHTML(r.descricao) + '</td>' +
       '<td><span class="badge-nb badge-ativo">' + escaparHTML(r.categoria || 'Sem categoria') + '</span></td>' +
       '<td class="text-muted small">' + escaparHTML(r.fonte || '—') + '</td>' +
       '<td class="text-muted small">' + formatarData(r.data_recebimento) + '</td>' +
-      '<td class="fw-semibold text-success text-end">' + formatarDinheiro(r.valor) + '</td></tr>';
+      '<td class="fw-semibold text-success text-end">' + formatarDinheiro(r.valor) + '</td>' +
+      '<td class="text-end">' + acao + '</td></tr>';
   }).join('');
+
+  corpo.querySelectorAll('.btn-remover-receita').forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      removerReceita(Number(botao.dataset.id));
+    });
+  });
 }
 
 function renderizarGastos(lista) {
@@ -123,18 +146,28 @@ function renderizarGastos(lista) {
   document.getElementById('total-gastos').textContent = formatarDinheiro(total);
 
   if (!lista.length) {
-    corpo.innerHTML = mensagemVazia('Nenhum gasto cadastrado.', 6);
+    corpo.innerHTML = mensagemVazia('Nenhum gasto cadastrado.', 7);
     return;
   }
 
   corpo.innerHTML = lista.map(function (g) {
+    const acao = podeEditarInstitucional()
+      ? '<button class="btn btn-outline-danger btn-sm btn-remover-gasto" data-id="' + g.id + '">Remover</button>'
+      : '<span class="text-muted small">Somente consulta</span>';
     return '<tr class="linha-gasto"><td class="col-gasto-desc">' + escaparHTML(g.descricao) + '</td>' +
       '<td class="col-gasto-acolhido text-muted small">' + escaparHTML(g.acolhido || 'Instituição') + '</td>' +
       '<td><span class="badge-nb badge-alta">' + escaparHTML(g.categoria) + '</span></td>' +
       '<td class="text-muted small">' + escaparHTML(g.fornecedor || '—') + '</td>' +
       '<td class="text-muted small">' + formatarData(g.data_gasto) + '</td>' +
-      '<td class="fw-semibold text-danger text-end">' + formatarDinheiro(g.valor) + '</td></tr>';
+      '<td class="fw-semibold text-danger text-end">' + formatarDinheiro(g.valor) + '</td>' +
+      '<td class="text-end">' + acao + '</td></tr>';
   }).join('');
+
+  corpo.querySelectorAll('.btn-remover-gasto').forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      removerGasto(Number(botao.dataset.id));
+    });
+  });
 }
 
 function renderizarPrestacoes(lista) {
@@ -263,6 +296,39 @@ async function baixarDocumentoFinanceiro(id) {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+  } catch (erro) {
+    mostrarAlerta('mensagem-financeiro', erro.message, 'danger');
+  }
+}
+
+async function removerGasto(id) {
+  if (!window.confirm('Remover este gasto? Ele deixará de aparecer nos totais, mas o histórico será preservado no banco.')) return;
+  try {
+    await apiFetch('/api/gastos/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-financeiro', 'Gasto removido com sucesso.');
+    await carregarFinanceiro();
+  } catch (erro) {
+    mostrarAlerta('mensagem-financeiro', erro.message, 'danger');
+  }
+}
+
+async function removerReceita(id) {
+  if (!window.confirm('Remover esta receita ou doação? Ela deixará de aparecer nos totais, mas o histórico será preservado no banco.')) return;
+  try {
+    await apiFetch('/api/receitas/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-financeiro', 'Receita removida com sucesso.');
+    await carregarFinanceiro();
+  } catch (erro) {
+    mostrarAlerta('mensagem-financeiro', erro.message, 'danger');
+  }
+}
+
+async function removerDocumentoInstitucional(id) {
+  if (!window.confirm('Remover este documento institucional? O arquivo deixará de ficar disponível para download.')) return;
+  try {
+    await apiFetch('/api/documentos/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-financeiro', 'Documento removido com sucesso.');
+    await carregarFinanceiro();
   } catch (erro) {
     mostrarAlerta('mensagem-financeiro', erro.message, 'danger');
   }

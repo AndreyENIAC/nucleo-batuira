@@ -41,6 +41,13 @@ def atualizar_autenticacao(conn: sqlite3.Connection) -> None:
 
 
 def atualizar_saude(conn: sqlite3.Connection) -> None:
+    colunas_prescricoes = colunas_da_tabela(conn, "prescricoes")
+    if "removida" not in colunas_prescricoes:
+        conn.execute(
+            "ALTER TABLE prescricoes ADD COLUMN removida INTEGER NOT NULL DEFAULT 0 "
+            "CHECK (removida IN (0, 1))"
+        )
+
     existentes = colunas_da_tabela(conn, "alertas")
     if "origem_tipo" not in existentes:
         conn.execute("ALTER TABLE alertas ADD COLUMN origem_tipo TEXT")

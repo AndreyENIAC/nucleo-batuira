@@ -33,6 +33,17 @@ if not exist "%RUNNER%" (
     exit /b 1
 )
 
+if exist "atualizar_banco.py" (
+    echo Verificando atualizacoes do banco...
+    "%VPY%" "atualizar_banco.py"
+    if errorlevel 1 (
+        echo ERRO: nao foi possivel atualizar o banco antes de iniciar.
+        echo Execute backend\configurar_windows.bat e consulte o log.
+        pause
+        exit /b 1
+    )
+)
+
 >"%LOG%" echo BACKEND NUCLEO BATUIRA - %date% %time%
 echo ============================================================
 echo BACKEND FLASK - NUCLEO BATUIRA

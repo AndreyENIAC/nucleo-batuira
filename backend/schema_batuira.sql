@@ -208,6 +208,8 @@ CREATE TABLE prescricoes (
     data_fim TEXT,
     status TEXT NOT NULL DEFAULT 'ativa'
         CHECK (status IN ('ativa', 'suspensa', 'encerrada')),
+    removida INTEGER NOT NULL DEFAULT 0
+        CHECK (removida IN (0, 1)),
     observacoes TEXT,
     criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

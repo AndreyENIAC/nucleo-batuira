@@ -1,6 +1,7 @@
 let acolhidoId = null;
 let acolhidoAtual = null;
 let catalogoAlergias = [];
+let notasCarregadas = [];
 
 const hojeISO = () => new Date().toISOString().split('T')[0];
 
@@ -30,7 +31,7 @@ function configurarFormularios() {
     'form-familiar': cadastrarFamiliar,
     'form-prescricao': cadastrarPrescricao,
     'form-nota': cadastrarNota,
-    'form-pia': cadastrarPia,
+    'form-documento-pia': enviarDocumentoPia,
     'form-pts': cadastrarPts,
     'form-plano-alta': cadastrarPlanoAlta,
     'form-beneficio': cadastrarBeneficio,
@@ -52,6 +53,10 @@ function configurarFormularios() {
   document.getElementById('nota-alerta')?.addEventListener('change', function (evento) {
     document.getElementById('nota-severidade').disabled = !evento.target.checked;
   });
+
+  document.getElementById('filtro-notas')?.addEventListener('change', function () {
+    aplicarFiltroNotas();
+  });
 }
 
 function configurarAcoesDinamicas() {
@@ -64,6 +69,24 @@ function configurarAcoesDinamicas() {
       return;
     }
 
+    const botaoRemoverAlergia = evento.target.closest('[data-remover-alergia]');
+    if (botaoRemoverAlergia) {
+      await removerAlergia(Number(botaoRemoverAlergia.dataset.removerAlergia));
+      return;
+    }
+
+    const botaoRemoverFamiliar = evento.target.closest('[data-remover-familiar]');
+    if (botaoRemoverFamiliar) {
+      await removerFamiliar(Number(botaoRemoverFamiliar.dataset.removerFamiliar));
+      return;
+    }
+
+    const botaoRemoverPrescricao = evento.target.closest('[data-remover-prescricao]');
+    if (botaoRemoverPrescricao) {
+      await removerPrescricao(Number(botaoRemoverPrescricao.dataset.removerPrescricao));
+      return;
+    }
+
     const botaoAlerta = evento.target.closest('[data-resolver-alerta]');
     if (botaoAlerta) {
       await resolverAlerta(Number(botaoAlerta.dataset.resolverAlerta));
@@ -73,6 +96,18 @@ function configurarAcoesDinamicas() {
     const botaoAlta = evento.target.closest('[data-concluir-alta]');
     if (botaoAlta) {
       await concluirPlanoAlta(Number(botaoAlta.dataset.concluirAlta));
+      return;
+    }
+
+    const botaoCancelarAlta = evento.target.closest('[data-cancelar-alta]');
+    if (botaoCancelarAlta) {
+      await cancelarPlanoAlta(Number(botaoCancelarAlta.dataset.cancelarAlta));
+      return;
+    }
+
+    const botaoRemoverBeneficio = evento.target.closest('[data-remover-beneficio]');
+    if (botaoRemoverBeneficio) {
+      await removerBeneficio(Number(botaoRemoverBeneficio.dataset.removerBeneficio));
       return;
     }
 
@@ -95,7 +130,7 @@ function configurarAcoesDinamicas() {
 }
 
 function definirDatasPadrao() {
-  ['prescricao-data-inicio', 'pia-data', 'pts-data', 'beneficio-inicio'].forEach(function (id) {
+  ['prescricao-data-inicio', 'pia-doc-data', 'pts-data', 'beneficio-inicio'].forEach(function (id) {
     const campo = document.getElementById(id);
     if (campo) campo.value = hojeISO();
   });
@@ -127,7 +162,7 @@ async function carregarPerfilCompleto() {
     renderizarAlergias(resultados[2], resultados[3]);
     renderizarPrescricoes(resultados[4]);
     renderizarNotas(resultados[5]);
-    renderizarPiaPts(resultados[6], resultados[7]);
+    renderizarPiaPts(resultados[6], resultados[7], resultados[10]);
     renderizarPlanoAlta(resultados[8]);
     renderizarBeneficios(resultados[9]);
     renderizarDocumentos(resultados[10]);
@@ -211,9 +246,12 @@ function renderizarAlergias(lista, catalogo) {
     return;
   }
   container.innerHTML = '<div class="row g-2">' + lista.map(function (a) {
+    const remover = podeEditarSaude()
+      ? '<button type="button" data-remover-alergia="' + a.id + '" class="btn btn-outline-danger btn-sm mt-2">Remover</button>'
+      : '';
     return '<div class="col-md-4"><div class="card-nb p-3 h-100"><strong>' + escaparHTML(a.nome) + '</strong>' +
       '<div class="small text-muted">Gravidade: ' + escaparHTML(a.gravidade || 'não informada') + '</div>' +
-      (a.observacoes ? '<div class="small mt-1">' + escaparHTML(a.observacoes) + '</div>' : '') +
+      (a.observacoes ? '<div class="small mt-1">' + escaparHTML(a.observacoes) + '</div>' : '') + remover +
       '</div></div>';
   }).join('') + '</div>';
 }
@@ -225,10 +263,13 @@ function renderizarFamiliares(lista) {
     return;
   }
   container.innerHTML = lista.map(function (f) {
-    return '<div class="card-nb p-3 mb-2"><strong>' + escaparHTML(f.nome) + '</strong>' +
+    const remover = podeEditarSaude()
+      ? '<button type="button" data-remover-familiar="' + f.id + '" class="btn btn-outline-danger btn-sm">Remover</button>'
+      : '';
+    return '<div class="card-nb p-3 mb-2"><div class="d-flex justify-content-between gap-3 flex-wrap"><div><strong>' + escaparHTML(f.nome) + '</strong>' +
       (f.contato_principal ? ' <span class="badge-nb badge-alta">Contato principal</span>' : '') +
       '<div class="text-muted small">' + escaparHTML(f.parentesco) + ' · ' +
-      escaparHTML(f.telefone || 'Sem telefone') + ' · ' + escaparHTML(f.email || 'Sem e-mail') + '</div></div>';
+      escaparHTML(f.telefone || 'Sem telefone') + ' · ' + escaparHTML(f.email || 'Sem e-mail') + '</div></div>' + remover + '</div></div>';
   }).join('');
 }
 
@@ -242,9 +283,10 @@ function renderizarPrescricoes(lista) {
   container.innerHTML = lista.map(function (p) {
     const classes = { ativa: 'badge-ativo', suspensa: 'badge-atencao', encerrada: 'badge-pendente' };
     const controle = podeEditarSaude()
-      ? '<div class="d-flex gap-2 align-items-center"><select id="status-prescricao-' + p.id + '" class="form-select form-select-sm">' +
+      ? '<div class="d-flex gap-2 align-items-center flex-wrap"><select id="status-prescricao-' + p.id + '" class="form-select form-select-sm">' +
         ['ativa', 'suspensa', 'encerrada'].map(s => '<option value="' + s + '" ' + (s === p.status ? 'selected' : '') + '>' + s + '</option>').join('') +
-        '</select><button type="button" data-alterar-prescricao="' + p.id + '" class="btn btn-outline-primary btn-sm">Atualizar</button></div>'
+        '</select><button type="button" data-alterar-prescricao="' + p.id + '" class="btn btn-outline-primary btn-sm">Atualizar</button>' +
+        '<button type="button" data-remover-prescricao="' + p.id + '" class="btn btn-outline-danger btn-sm">Remover</button></div>'
       : '<span class="badge-nb ' + (classes[p.status] || 'badge-pendente') + '">' + escaparHTML(p.status) + '</span>';
 
     return '<div class="card-nb p-3 mb-2"><div class="d-flex justify-content-between gap-3 flex-wrap">' +
@@ -258,9 +300,23 @@ function renderizarPrescricoes(lista) {
 }
 
 function renderizarNotas(lista) {
+  notasCarregadas = lista;
+  aplicarFiltroNotas();
+}
+
+function aplicarFiltroNotas() {
   const container = document.getElementById('lista-notas');
+  const filtro = document.getElementById('filtro-notas')?.value || 'todas';
+  let lista = notasCarregadas;
+
+  if (filtro === 'pendentes') {
+    lista = lista.filter(n => n.alerta_id && n.alerta_status !== 'resolvido');
+  } else if (filtro === 'resolvidas') {
+    lista = lista.filter(n => n.alerta_id && n.alerta_status === 'resolvido');
+  }
+
   if (!lista.length) {
-    container.innerHTML = '<p class="text-muted">Nenhuma nota clínica cadastrada.</p>';
+    container.innerHTML = '<p class="text-muted">Nenhuma nota encontrada para este filtro.</p>';
     return;
   }
 
@@ -283,21 +339,36 @@ function renderizarNotas(lista) {
   }).join('');
 }
 
-function renderizarPiaPts(pias, ptsLista) {
+function renderizarPiaPts(pias, ptsLista, documentos) {
   const pia = document.getElementById('conteudo-pia');
   const pts = document.getElementById('conteudo-pts');
+  const documentosPia = (documentos || []).filter(function (d) {
+    const categoria = String(d.categoria || '').toLowerCase();
+    return categoria === 'pia' || categoria.includes('plano individual de atendimento');
+  });
 
-  pia.innerHTML = pias.length ? pias.map(function (p) {
-    const metas = p.metas.map(function (m) {
-      return '<div class="mb-3"><div class="d-flex justify-content-between"><span>' + escaparHTML(m.area + ': ' + m.objetivo) +
-        '</span><strong>' + m.progresso + '%</strong></div><div class="progresso-barra"><div class="progresso-fill" style="width:' +
-        m.progresso + '%"></div></div><div class="small text-muted mt-1">' + escaparHTML(m.acoes) + '</div></div>';
-    }).join('');
-    return '<div class="card-nb p-3 mb-3"><strong>PIA ' + escaparHTML(p.versao) + '</strong>' +
-      '<div class="small text-muted mb-2">Elaborado em ' + formatarData(p.data_elaboracao) + ' · ' + escaparHTML(p.status) + '</div>' +
-      '<p><strong>Situação:</strong> ' + escaparHTML(p.situacao_atual) + '</p>' +
-      '<p><strong>Necessidades:</strong> ' + escaparHTML(p.necessidades) + '</p>' + metas + '</div>';
-  }).join('') : '<p class="text-muted">Nenhum PIA cadastrado.</p>';
+  const anexosPia = documentosPia.map(function (d) {
+    const indisponivel = d.status === 'indisponivel';
+    const acao = indisponivel
+      ? '<span class="badge-nb badge-pendente">Arquivo indisponível</span>'
+      : '<button type="button" class="btn btn-outline-primary btn-sm" data-download-documento="' + d.id + '" data-nome-arquivo="' + escaparHTML(d.nome_original) + '">⬇ Baixar PIA</button>';
+    return '<div class="documento-item"><div><strong>' + escaparHTML(d.titulo) + '</strong>' +
+      '<div class="small text-muted">' + escaparHTML(d.nome_original) + ' · enviado em ' + formatarDataHora(d.enviado_em) + '</div>' +
+      (d.descricao ? '<div class="small">' + escaparHTML(d.descricao) + '</div>' : '') + '</div>' + acao + '</div>';
+  }).join('');
+
+  let antigos = '';
+  if (pias.length) {
+    antigos = '<details class="mt-3"><summary class="text-muted">Ver registros antigos preenchidos no sistema</summary><div class="mt-3">' + pias.map(function (p) {
+      return '<div class="card-nb p-3 mb-2"><strong>PIA ' + escaparHTML(p.versao) + '</strong>' +
+        '<div class="small text-muted">Elaborado em ' + formatarData(p.data_elaboracao) + ' · ' + escaparHTML(p.status) + '</div>' +
+        '<p class="mb-1 mt-2"><strong>Situação:</strong> ' + escaparHTML(p.situacao_atual) + '</p>' +
+        '<p class="mb-0"><strong>Necessidades:</strong> ' + escaparHTML(p.necessidades) + '</p></div>';
+    }).join('') + '</div></details>';
+  }
+
+  pia.innerHTML = anexosPia || '<p class="text-muted">Nenhum documento PIA anexado.</p>';
+  pia.innerHTML += antigos;
 
   pts.innerHTML = ptsLista.length ? ptsLista.map(function (p) {
     const intervencoes = p.intervencoes.map(function (i) {
@@ -306,8 +377,9 @@ function renderizarPiaPts(pias, ptsLista) {
     }).join('');
     return '<div class="card-nb p-3 mb-3"><strong>PTS — ' + formatarData(p.data_reuniao) + '</strong>' +
       '<div class="small text-muted">Status: ' + escaparHTML(p.status) + '</div>' +
-      '<p class="mt-2"><strong>Diagnóstico:</strong> ' + escaparHTML(p.diagnostico_situacao) + '</p>' +
-      '<p><strong>Objetivos:</strong> ' + escaparHTML(p.objetivos_terapeuticos) + '</p><ul>' + intervencoes + '</ul></div>';
+      '<p class="mt-2"><strong>Avaliação da situação:</strong> ' + escaparHTML(p.diagnostico_situacao) + '</p>' +
+      '<p><strong>Objetivos compartilhados:</strong> ' + escaparHTML(p.objetivos_terapeuticos) + '</p>' +
+      (intervencoes ? '<ul>' + intervencoes + '</ul>' : '<p class="text-muted">Nenhuma intervenção registrada.</p>') + '</div>';
   }).join('') : '<p class="text-muted">Nenhum PTS cadastrado.</p>';
 }
 
@@ -322,13 +394,16 @@ function renderizarPlanoAlta(planos) {
       const icone = e.status === 'concluido' ? '✅' : e.status === 'em_andamento' ? '🔄' : '⏳';
       return '<div class="py-2 border-bottom">' + icone + ' ' + escaparHTML(e.descricao) + '</div>';
     }).join('');
-    const botao = podeEditarSaude() && p.status !== 'concluido'
-      ? '<button type="button" data-concluir-alta="' + p.id + '" class="btn btn-success btn-sm mt-3">Concluir e marcar acolhido como alta</button>'
-      : '';
-    return '<div class="card-nb p-3 mb-3"><div class="d-flex justify-content-between"><strong>Plano de alta</strong><span class="badge-nb badge-pendente">' + escaparHTML(p.status) + '</span></div>' +
+    let botoes = '';
+    if (podeEditarSaude() && !['concluido', 'cancelado'].includes(p.status)) {
+      botoes = '<div class="d-flex gap-2 flex-wrap mt-3"><button type="button" data-concluir-alta="' + p.id + '" class="btn btn-success btn-sm">Concluir e marcar acolhido como alta</button>' +
+        '<button type="button" data-cancelar-alta="' + p.id + '" class="btn btn-outline-danger btn-sm">Cancelar plano</button></div>';
+    }
+    const classeStatus = p.status === 'concluido' ? 'badge-ativo' : p.status === 'cancelado' ? 'badge-critico' : 'badge-pendente';
+    return '<div class="card-nb p-3 mb-3"><div class="d-flex justify-content-between"><strong>Plano de alta</strong><span class="badge-nb ' + classeStatus + '">' + escaparHTML(p.status) + '</span></div>' +
       '<p class="mt-2"><strong>Previsão:</strong> ' + formatarData(p.previsao_alta) + '</p>' +
       '<p><strong>Tipo:</strong> ' + escaparHTML(p.tipo_alta || '—') + '</p>' + etapas +
-      '<p class="mt-3 mb-0"><strong>Orientações:</strong> ' + escaparHTML(p.orientacoes || '—') + '</p>' + botao + '</div>';
+      '<p class="mt-3 mb-0"><strong>Orientações:</strong> ' + escaparHTML(p.orientacoes || '—') + '</p>' + botoes + '</div>';
   }).join('');
 }
 
@@ -341,7 +416,7 @@ function renderizarBeneficios(lista) {
 
   container.innerHTML = lista.map(function (b) {
     const controle = podeEditarSaude()
-      ? '<div class="d-flex gap-2"><select id="status-beneficio-' + b.id + '" class="form-select form-select-sm"><option value="ativo" ' + (b.status === 'ativo' ? 'selected' : '') + '>Ativo</option><option value="suspenso" ' + (b.status === 'suspenso' ? 'selected' : '') + '>Suspenso</option><option value="encerrado" ' + (b.status === 'encerrado' ? 'selected' : '') + '>Encerrado</option></select><button type="button" data-alterar-beneficio="' + b.id + '" class="btn btn-outline-primary btn-sm">Atualizar</button></div>'
+      ? '<div class="d-flex gap-2 flex-wrap"><select id="status-beneficio-' + b.id + '" class="form-select form-select-sm"><option value="ativo" ' + (b.status === 'ativo' ? 'selected' : '') + '>Ativo</option><option value="suspenso" ' + (b.status === 'suspenso' ? 'selected' : '') + '>Suspenso</option><option value="encerrado" ' + (b.status === 'encerrado' ? 'selected' : '') + '>Encerrado</option></select><button type="button" data-alterar-beneficio="' + b.id + '" class="btn btn-outline-primary btn-sm">Atualizar</button><button type="button" data-remover-beneficio="' + b.id + '" class="btn btn-outline-danger btn-sm">Remover</button></div>'
       : '<span class="badge-nb ' + (b.status === 'ativo' ? 'badge-ativo' : 'badge-pendente') + '">' + escaparHTML(b.status) + '</span>';
     return '<div class="card-nb p-3 mb-2"><div class="d-flex justify-content-between gap-3 flex-wrap"><div><strong>' + escaparHTML(b.tipo_beneficio) + '</strong>' +
       '<div>' + formatarDinheiro(b.valor_mensal) + ' por mês</div><div class="small text-muted">' + escaparHTML(b.orgao_pagador || 'Órgão não informado') +
@@ -395,6 +470,39 @@ async function alterarStatusAcolhido(status) {
     });
     mostrarAlerta('mensagem-perfil', 'Situação atualizada.');
     carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
+}
+
+async function removerAlergia(alergiaId) {
+  if (!window.confirm('Remover esta alergia do perfil?')) return;
+  try {
+    await apiFetch('/api/acolhidos/' + acolhidoId + '/alergias/' + alergiaId, { method: 'DELETE' });
+    mostrarAlerta('mensagem-perfil', 'Alergia removida.');
+    await carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
+}
+
+async function removerFamiliar(id) {
+  if (!window.confirm('Remover este familiar do perfil? O registro será apenas inativado no banco.')) return;
+  try {
+    await apiFetch('/api/familiares/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-perfil', 'Familiar removido.');
+    await carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
+}
+
+async function removerPrescricao(id) {
+  if (!window.confirm('Remover esta prescrição da visualização? Use somente para corrigir cadastro feito por engano.')) return;
+  try {
+    await apiFetch('/api/prescricoes/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-perfil', 'Prescrição removida.');
+    await carregarPerfilCompleto();
   } catch (erro) {
     mostrarAlerta('mensagem-perfil', erro.message, 'danger');
   }
@@ -474,24 +582,35 @@ async function resolverAlerta(id) {
   }
 }
 
-async function cadastrarPia(evento) {
+async function enviarDocumentoPia(evento) {
   evento.preventDefault();
-  const dados = {
-    versao: document.getElementById('pia-versao').value.trim(),
-    situacao_atual: document.getElementById('pia-situacao').value.trim(),
-    necessidades: document.getElementById('pia-necessidades').value.trim(),
-    potencialidades: document.getElementById('pia-potencialidades').value.trim(),
-    data_elaboracao: document.getElementById('pia-data').value,
-    data_revisao: document.getElementById('pia-revisao').value || null,
-    status: document.getElementById('pia-status').value,
-    meta_inicial: {
-      area: document.getElementById('pia-meta-area').value.trim(),
-      objetivo: document.getElementById('pia-meta-objetivo').value.trim(),
-      acoes: document.getElementById('pia-meta-acoes').value.trim()
-    }
-  };
-  await enviarCadastro('/api/acolhidos/' + acolhidoId + '/pias', dados, evento.target, 'PIA cadastrado.');
-  document.getElementById('pia-data').value = hojeISO();
+  const arquivo = document.getElementById('pia-doc-arquivo').files[0];
+  if (!arquivo) {
+    mostrarAlerta('mensagem-perfil', 'Selecione o arquivo do PIA.', 'danger');
+    return;
+  }
+
+  const versao = document.getElementById('pia-doc-versao').value.trim();
+  const dataElaboracao = document.getElementById('pia-doc-data').value;
+  const revisao = document.getElementById('pia-doc-revisao').value;
+  const formData = new FormData();
+  formData.append('arquivo', arquivo);
+  formData.append('titulo', 'PIA' + (versao ? ' - ' + versao : ''));
+  formData.append('categoria', 'PIA');
+  formData.append('escopo', 'acolhido');
+  formData.append('acolhido_id', acolhidoId);
+  formData.append('data_validade', revisao || '');
+  formData.append('descricao', 'Elaboração: ' + formatarData(dataElaboracao) + (revisao ? ' · Próxima revisão: ' + formatarData(revisao) : ''));
+
+  try {
+    await apiFetch('/api/documentos', { method: 'POST', body: formData });
+    mostrarAlerta('mensagem-perfil', 'Documento PIA enviado.');
+    evento.target.reset();
+    document.getElementById('pia-doc-data').value = hojeISO();
+    await carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
 }
 
 async function cadastrarPts(evento) {
@@ -536,6 +655,17 @@ async function concluirPlanoAlta(id) {
   }
 }
 
+async function cancelarPlanoAlta(id) {
+  if (!window.confirm('Cancelar este plano de alta? O acolhido não será marcado como alta.')) return;
+  try {
+    await apiFetch('/api/planos-alta/' + id + '/cancelar', { method: 'PATCH' });
+    mostrarAlerta('mensagem-perfil', 'Plano de alta cancelado.');
+    await carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
+}
+
 async function cadastrarBeneficio(evento) {
   evento.preventDefault();
   const dados = {
@@ -557,6 +687,17 @@ async function alterarStatusBeneficio(id, status) {
     await apiFetch('/api/beneficios/' + id + '/status', { method: 'PATCH', body: JSON.stringify({ status }) });
     mostrarAlerta('mensagem-perfil', 'Status do benefício atualizado.');
     carregarPerfilCompleto();
+  } catch (erro) {
+    mostrarAlerta('mensagem-perfil', erro.message, 'danger');
+  }
+}
+
+async function removerBeneficio(id) {
+  if (!window.confirm('Remover este benefício da visualização?')) return;
+  try {
+    await apiFetch('/api/beneficios/' + id, { method: 'DELETE' });
+    mostrarAlerta('mensagem-perfil', 'Benefício removido.');
+    await carregarPerfilCompleto();
   } catch (erro) {
     mostrarAlerta('mensagem-perfil', erro.message, 'danger');
   }

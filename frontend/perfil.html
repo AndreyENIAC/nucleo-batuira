@@ -141,7 +141,20 @@
         </div>
 
         <div id="notas" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><h5>Notas clínicas</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-nota">➕ Nova</button></div>
+          <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+            <h5 class="mb-0">Notas clínicas</h5>
+            <div class="d-flex gap-2 align-items-end flex-wrap">
+              <div>
+                <label for="filtro-notas" class="form-label small mb-1">Mostrar</label>
+                <select id="filtro-notas" class="form-select form-select-sm">
+                  <option value="todas">Todas as notas</option>
+                  <option value="pendentes">Somente alertas pendentes</option>
+                  <option value="resolvidas">Somente alertas resolvidos</option>
+                </select>
+              </div>
+              <button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#nova-nota">➕ Nova</button>
+            </div>
+          </div>
           <div id="nova-nota" class="collapse mb-3" data-perfis="admin,technical">
             <form id="form-nota" class="card-nb p-3">
               <div class="row g-2">
@@ -157,37 +170,37 @@
         </div>
 
         <div id="pia-pts" class="tab-pane fade">
-          <div class="d-flex justify-content-between mb-3"><h5>PIA</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pia">➕ Novo PIA</button></div>
+          <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <h5 class="mb-0">PIA — Plano Individual de Atendimento</h5>
+            <button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pia">➕ Anexar PIA</button>
+          </div>
+          <div class="alert alert-info small">
+            O PIA é um documento usado nos serviços de acolhimento de crianças e adolescentes. Nesta versão do projeto, a equipe prepara o documento completo fora do sistema e anexa o arquivo pronto aqui.
+          </div>
           <div id="novo-pia" class="collapse mb-3" data-perfis="admin,technical">
-            <form id="form-pia" class="card-nb p-3">
+            <form id="form-documento-pia" class="card-nb p-3">
               <div class="row g-2">
-                <div class="col-md-2"><label class="form-label">Versão *</label><input id="pia-versao" class="form-control" placeholder="v2" required></div>
-                <div class="col-md-3"><label class="form-label">Data *</label><input id="pia-data" type="date" class="form-control" required></div>
-                <div class="col-md-3"><label class="form-label">Revisão</label><input id="pia-revisao" type="date" class="form-control"></div>
-                <div class="col-md-4"><label class="form-label">Status</label><select id="pia-status" class="form-select"><option value="rascunho">Rascunho</option><option value="ativo" selected>Ativo</option><option value="revisado">Revisado</option><option value="encerrado">Encerrado</option></select></div>
-                <div class="col-md-6"><label class="form-label">Situação atual *</label><textarea id="pia-situacao" class="form-control" rows="2" required></textarea></div>
-                <div class="col-md-6"><label class="form-label">Necessidades *</label><textarea id="pia-necessidades" class="form-control" rows="2" required></textarea></div>
-                <div class="col-12"><label class="form-label">Potencialidades</label><textarea id="pia-potencialidades" class="form-control" rows="2"></textarea></div>
-                <div class="col-12"><hr><strong>Primeira meta (opcional)</strong></div>
-                <div class="col-md-3"><label class="form-label">Área</label><input id="pia-meta-area" class="form-control"></div>
-                <div class="col-md-4"><label class="form-label">Objetivo</label><input id="pia-meta-objetivo" class="form-control"></div>
-                <div class="col-md-5"><label class="form-label">Ações</label><input id="pia-meta-acoes" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Versão</label><input id="pia-doc-versao" class="form-control" placeholder="Ex.: v1 ou 2026-01"></div>
+                <div class="col-md-3"><label class="form-label">Data de elaboração *</label><input id="pia-doc-data" type="date" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Próxima revisão</label><input id="pia-doc-revisao" type="date" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Arquivo do PIA *</label><input id="pia-doc-arquivo" type="file" class="form-control" accept=".pdf,.doc,.docx" required><div class="form-text">Formatos aceitos: PDF, DOC e DOCX. Limite: 10 MB.</div></div>
               </div>
-              <button class="btn btn-success mt-3">Salvar PIA</button>
+              <button class="btn btn-success mt-3">Enviar documento PIA</button>
             </form>
           </div>
           <div id="conteudo-pia" class="mb-5">Carregando...</div>
 
-          <div class="d-flex justify-content-between mb-3"><h5>PTS</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pts">➕ Novo PTS</button></div>
+          <div class="d-flex justify-content-between mb-3"><h5>PTS — Projeto Terapêutico Singular</h5><button data-perfis="admin,technical" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#novo-pts">➕ Novo PTS</button></div>
+          <div class="alert alert-info small">O PTS é um plano de cuidado individualizado construído pela equipe de saúde com a participação da pessoa atendida e, quando necessário, de sua família. Ele reúne avaliação da situação, objetivos, intervenções, responsáveis e revisão do plano.</div>
           <div id="novo-pts" class="collapse mb-3" data-perfis="admin,technical">
             <form id="form-pts" class="card-nb p-3">
               <div class="row g-2">
                 <div class="col-md-3"><label class="form-label">Data da reunião *</label><input id="pts-data" type="date" class="form-control" required></div>
                 <div class="col-md-3"><label class="form-label">Revisão</label><input id="pts-revisao" type="date" class="form-control"></div>
                 <div class="col-md-3"><label class="form-label">Status *</label><select id="pts-status" class="form-select"><option value="ativo">Ativo</option><option value="em_revisao">Em revisão</option><option value="encerrado">Encerrado</option></select></div>
-                <div class="col-md-6"><label class="form-label">Diagnóstico da situação *</label><textarea id="pts-diagnostico" class="form-control" rows="2" required></textarea></div>
-                <div class="col-md-6"><label class="form-label">Objetivos terapêuticos *</label><textarea id="pts-objetivos" class="form-control" rows="2" required></textarea></div>
-                <div class="col-12"><label class="form-label">Avaliação da equipe</label><textarea id="pts-avaliacao" class="form-control" rows="2"></textarea></div>
+                <div class="col-md-6"><label class="form-label">Avaliação da situação e necessidades *</label><textarea id="pts-diagnostico" class="form-control" rows="2" required></textarea></div>
+                <div class="col-md-6"><label class="form-label">Objetivos compartilhados *</label><textarea id="pts-objetivos" class="form-control" rows="2" required></textarea></div>
+                <div class="col-12"><label class="form-label">Participação da equipe, pessoa e família</label><textarea id="pts-avaliacao" class="form-control" rows="2"></textarea></div>
                 <div class="col-12"><hr><strong>Primeira intervenção (opcional)</strong></div>
                 <div class="col-md-3"><label class="form-label">Especialidade</label><input id="pts-especialidade" class="form-control" placeholder="Fisioterapia"></div>
                 <div class="col-md-6"><label class="form-label">Intervenção</label><input id="pts-intervencao" class="form-control"></div>
@@ -264,7 +277,9 @@
               <button class="btn btn-success mt-3">Enviar</button>
             </form>
           </div>
-          <div class="alert alert-info small">Documentos antigos cujo arquivo físico não estava no ZIP aparecerão como indisponíveis. Novos uploads podem ser baixados normalmente.</div>
+          <div class="alert alert-info small">
+            Formatos aceitos: PDF, PNG, JPG, JPEG, DOC, DOCX, XLS e XLSX, com tamanho máximo de 10 MB. Documentos antigos cujo arquivo físico não estava no ZIP aparecerão como indisponíveis.
+          </div>
           <div id="lista-documentos-acolhido">Carregando...</div>
         </div>
       </div>

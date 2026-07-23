@@ -54,7 +54,7 @@
               <div class="row g-2">
                 <div class="col-md-4"><label class="form-label">Título *</label><input id="doc-inst-titulo" class="form-control" required></div>
                 <div class="col-md-3"><label class="form-label">Categoria *</label><input id="doc-inst-categoria" class="form-control" placeholder="Licença, contrato..." required></div>
-                <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="doc-inst-arquivo" type="file" class="form-control" required></div>
+                <div class="col-md-5"><label class="form-label">Arquivo *</label><input id="doc-inst-arquivo" type="file" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx" required><div class="form-text">Formatos aceitos: PDF, PNG, JPG, DOC, DOCX, XLS e XLSX. Limite: 10 MB.</div></div>
               </div>
               <button class="btn btn-success mt-3">Enviar</button>
             </form>
@@ -82,8 +82,8 @@
           </div>
           <div class="card-nb tabela-scroll">
             <table class="tabela-nb">
-              <thead><tr><th>Descrição</th><th>Categoria</th><th>Origem</th><th>Data</th><th class="text-end">Valor</th></tr></thead>
-              <tbody id="corpo-receitas"><tr><td colspan="5" class="estado-carregando">Carregando...</td></tr></tbody>
+              <thead><tr><th>Descrição</th><th>Categoria</th><th>Origem</th><th>Data</th><th class="text-end">Valor</th><th class="text-end">Ações</th></tr></thead>
+              <tbody id="corpo-receitas"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -108,8 +108,8 @@
           </div>
           <div class="card-nb tabela-scroll">
             <table class="tabela-nb">
-              <thead><tr><th>Descrição</th><th>Acolhido</th><th>Categoria</th><th>Fornecedor</th><th>Data</th><th class="text-end">Valor</th></tr></thead>
-              <tbody id="corpo-gastos"><tr><td colspan="6" class="estado-carregando">Carregando...</td></tr></tbody>
+              <thead><tr><th>Descrição</th><th>Acolhido</th><th>Categoria</th><th>Fornecedor</th><th>Data</th><th class="text-end">Valor</th><th class="text-end">Ações</th></tr></thead>
+              <tbody id="corpo-gastos"><tr><td colspan="7" class="estado-carregando">Carregando...</td></tr></tbody>
             </table>
           </div>
         </div>
