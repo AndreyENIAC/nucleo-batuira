@@ -1,0 +1,1 @@
+venv\Scripts\python.exe resetar_admin.py

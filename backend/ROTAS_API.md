@@ -21,16 +21,12 @@
 - `GET /api/dashboard`
 - `PATCH /api/alertas/<id>/resolver`
 
-O dashboard retorna saldo do mês, contagem dos acolhidos por status, alertas e os próximos eventos permitidos ao perfil conectado.
-
 ## Acolhidos
 - `GET /api/acolhidos`
 - `GET /api/acolhidos/<id>`
 - `POST /api/acolhidos`
 - `PUT /api/acolhidos/<id>`
 - `PATCH /api/acolhidos/<id>/status`
-
-As operações de alteração são permitidas ao administrador e à equipe técnica.
 
 ## Família, alergias e saúde
 - `GET/POST /api/acolhidos/<id>/familiares`
