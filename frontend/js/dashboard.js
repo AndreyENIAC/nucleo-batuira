@@ -31,6 +31,7 @@ function preencherTexto(id, valor) {
 
 function renderizarAlertas(alertas) {
   const container = document.getElementById('lista-alertas');
+  container.classList.remove('estado-carregando');
 
   if (!alertas.length) {
     container.innerHTML = '<p class="text-muted mb-0">Nenhum alerta aberto.</p>';

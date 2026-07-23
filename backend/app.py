@@ -756,7 +756,6 @@ def dashboard():
             LEFT JOIN acolhidos a ON a.id = al.acolhido_id
             WHERE al.status IN ('aberto', 'em_tratamento')
             ORDER BY datetime(al.criado_em) DESC, al.id DESC
-            LIMIT 5
             """
         ).fetchall()
         total_alertas = conn.execute(
